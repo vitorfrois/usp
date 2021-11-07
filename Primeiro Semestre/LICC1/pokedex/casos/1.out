@@ -1,0 +1,32 @@
+Nome do Pokemon: Garchomp
+Tipo primario: Dragon
+Tipo secundario: Ground
+Status:
+	HP: 108
+	Ataque: 130
+	Defesa: 95
+	Ataque Especial: 80
+	Defesa Especial: 85
+	Velocidade: 102
+
+Nome do Ataque: Earthquake
+Poder base: 100
+Acuracia: 1.000000
+Classe: p
+
+Nome do Pokemon: Alakazam
+Tipo primario: Psychic
+Tipo secundario: none
+Status:
+	HP: 55
+	Ataque: 50
+	Defesa: 45
+	Ataque Especial: 135
+	Defesa Especial: 95
+	Velocidade: 120
+
+Nome do Ataque: Psychic
+Poder base: 90
+Acuracia: 1.000000
+Classe: s
+

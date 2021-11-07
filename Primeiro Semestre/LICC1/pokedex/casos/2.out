@@ -1,0 +1,16 @@
+Nome do Pokemon: Garchomp
+Tipo primario: Dragon
+Tipo secundario: Ground
+Status:
+	HP: 108
+	Ataque: 130
+	Defesa: 95
+	Ataque Especial: 80
+	Defesa Especial: 85
+	Velocidade: 102
+
+Nome do Ataque: Earthquake
+Poder base: 100
+Acuracia: 1.000000
+Classe: p
+

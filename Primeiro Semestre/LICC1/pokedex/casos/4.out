@@ -1,0 +1,22 @@
+Nome do Pokemon: Gengar
+Tipo primario: Ghost
+Tipo secundario: Poison
+Status:
+	HP: 60
+	Ataque: 65
+	Defesa: 60
+	Ataque Especial: 130
+	Defesa Especial: 75
+	Velocidade: 110
+
+Nome do Pokemon: Snorlax
+Tipo primario: Normal
+Tipo secundario: None
+Status:
+	HP: 160
+	Ataque: 110
+	Defesa: 65
+	Ataque Especial: 65
+	Defesa Especial: 110
+	Velocidade: 30
+
