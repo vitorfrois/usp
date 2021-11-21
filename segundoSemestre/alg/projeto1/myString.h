@@ -5,3 +5,7 @@
  * @return char* string
  */
 char* readString(int separator);
+
+char *readword(FILE *stream, char sep);
+
+char *readline(FILE *stream);

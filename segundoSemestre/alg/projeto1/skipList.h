@@ -3,7 +3,7 @@ typedef struct ENTRY{
 }Entry;
 
 typedef struct NODE{
-    int level;
+    int level, maxLevel;
     Entry data;
     struct NODE *next, *down;
 } Node;

@@ -6,8 +6,11 @@ all: $(objects)
 run:
 	./main
 
-valLeak:
-	valgrind --leak-check=full ./main
+zip:
+	zip program.zip *.c *.h Makefile
+
+valLeak: all
+	valgrind --show-leak-kinds=all --track-origins=yes --leak-check=full -s ./main
 
 valgrind:
 	valgrind ./main
@@ -18,3 +21,5 @@ main.o: skipList.h myString.h
 
 clean:
 	rm *.o main vgcore.*
+
+go: all run
