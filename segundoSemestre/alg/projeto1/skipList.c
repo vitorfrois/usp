@@ -11,7 +11,7 @@ Skiplist *newSkiplist(){
 
 	sl->lenght = 0;
 	sl->level = 0;
-	sl->maxlevel = 40;
+	sl->maxlevel = 20;
     sl->header = malloc(sizeof(Node**) * sl->maxlevel);
 	for(int i = 0; i < sl->maxlevel; i++){
 		if(i == 0)
@@ -158,6 +158,7 @@ void updateEntry(Skiplist *sl, char *word, char *definition){
 	
 	Node** updates = malloc(sizeof(Node*) * sl->maxlevel); //vetor de updates
 	Node *aux = sl->upleft;
+	
 	while(aux->level != 0){
 		while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
 			aux = aux->next;
