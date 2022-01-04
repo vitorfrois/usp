@@ -1,2 +1,2 @@
-# usp
-repositório dos trem da usp
+# USP
+Repositório dos arquivos da USP, divido em períodos
