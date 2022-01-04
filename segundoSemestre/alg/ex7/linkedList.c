@@ -90,7 +90,6 @@ int removeItem(List *l, int id){
             free(p);
         }
     }
-
     return 1;
 }
 

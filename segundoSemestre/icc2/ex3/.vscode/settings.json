@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "stdio.h": "c",
+        "sstream": "c",
+        "*.tcc": "c",
+        "algorithm": "c",
+        "mystring.h": "c",
+        "string.h": "c"
+    }
+}

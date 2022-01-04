@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "linkedlist.h": "c",
+        "random": "c"
+    }
+}

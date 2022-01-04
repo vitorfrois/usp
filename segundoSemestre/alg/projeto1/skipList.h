@@ -1,35 +1,17 @@
-typedef struct ENTRY{
-    char *word, *definition;
-}Entry;
+#ifndef _SKIP_LIST_H_
+#define _SKIP_LIST_H_
 
-typedef struct NODE{
-    int level, maxLevel;
-    Entry data;
-    struct NODE *next, *down;
-} Node;
-
-typedef struct SKIPLIST{
-    int level;
-    int lenght;
-    int maxlevel;
-    Node *upleft;
-    Node **header;
-}Skiplist;
+typedef struct entry Entry;
+typedef struct node Node;
+typedef struct skiplist Skiplist;
 
 Skiplist *newSkiplist();
 
-Node* createNode(
-	int level, 
-	char *word, 
-	char *definition,
-	Node* next,
-	Node* down
-);
-
-bool search(Skiplist *sl, char *word, bool verbose);
+void search(Skiplist *sl, char *word);
 void insertEntry(Skiplist *sl, char *word, char *definition);
 void updateEntry(Skiplist *sl, char *word, char *definition);
 void removeEntry(Skiplist *sl, char *word);
 void printSkiplist(Skiplist* sl, char* mode);
-void freeList(Skiplist* sl);
+void freeSkipList(Skiplist* sl);
 
+#endif

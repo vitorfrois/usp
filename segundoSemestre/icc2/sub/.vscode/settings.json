@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "atomic": "c",
+        "*.tcc": "c",
+        "compare": "c",
+        "optional": "c",
+        "numeric": "c",
+        "sstream": "c",
+        "cmath": "c"
+    }
+}

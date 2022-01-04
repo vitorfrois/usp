@@ -1,11 +1,12 @@
-/**
- * @brief Function that reads and return string
- * 
- * @param separator if 1, consider ' '; if 0, dont consider ' '
- * @return char* string
- */
+#ifndef _MY_STRING_H_
+#define _MY_STRING_H_
+
+#include <stdbool.h>
+
 char* readString(int separator);
 
 char *readword(FILE *stream, char sep);
 
 char *readline(FILE *stream);
+
+#endif

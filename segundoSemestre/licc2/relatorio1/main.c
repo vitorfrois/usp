@@ -224,31 +224,3 @@ void timeMeasure(int size, int max, int iterations, char* mode){
     printf("%d,", (int) (time_taken*1000000));
     //printf("%sSort took %f seconds to execute the sort on %d elements\n", mode, time_taken, size); 
 }
-
-
-
-int main(int argc, char* argv[]){
-    char* ptr;
-    //Caso a função seja chamada de forma errada, o usuário é avisado
-    if(argc != 5){
-        printf("Program usage:\n");
-        printf("./main size max iterations mode\n");
-        printf("max - tamanho máximo do vetor\n");
-        printf("step - tamanho de cada vetor por iteração.\n");
-        printf("iterations - Número de iterações (números maiores evitam desvios)\n");
-        printf("mode - Escolha um método disponível: merge, insertion ou bubble.\n");
-        return 0;
-    }
-
-    int max = strtol(argv[1], &ptr, 10);
-    int step = strtol(argv[2], &ptr, 10);
-    int iterations = strtol(argv[3], &ptr, 10);
-
-    printf("%sSort took x microsseconds to execute the sort on (i <= %d; i += %d) elements\n", argv[4], max, step);
-    for(int i = step; i <= max; i += step)
-        timeMeasure(i, max, iterations, argv[4]);
-    
-    return 0;
-}
-
-

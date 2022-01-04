@@ -2,25 +2,42 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+
 #include <time.h>
 #include "skipList.h"
-#define NULL_STRING " "
 
-Skiplist *newSkiplist(){
-    Skiplist* sl = malloc(sizeof(Skiplist));
+#define NULL_STRING " \0"
+#define MAX_AMT_LEVEL 42069
 
-	sl->lenght = 0;
-	sl->level = 0;
-	sl->maxlevel = 20;
-    sl->header = malloc(sizeof(Node**) * sl->maxlevel);
-	for(int i = 0; i < sl->maxlevel; i++){
-		if(i == 0)
-			sl->header[i] = createNode(i, NULL_STRING, NULL_STRING, NULL, NULL);
-		else
-			sl->header[i] = createNode(i, NULL_STRING, NULL_STRING, NULL, sl->header[i-1]);
-	}
-	sl->upleft = sl->header[0];
-    return sl;
+struct entry{
+    char *word, *definition;
+};
+
+struct node{
+    int level, maxLevel;
+    Entry *data;
+    struct node *next, *down;
+};
+
+struct skiplist{
+    int level;
+    int maxlevel;
+    Node **header;
+};
+
+static Entry *_createEntry(char *word, char *definition) {
+	Entry *newEntry = malloc(sizeof(Entry));
+
+	newEntry->word = word;
+	newEntry->definition = definition;
+
+	return newEntry;
+}
+
+static void _freeEntry(Entry *data){
+	free(data->word);
+	free(data->definition);
+	free(data);
 }
 
 /**
@@ -33,232 +50,204 @@ Skiplist *newSkiplist(){
  * @param down nó abaixo
  * @return Node* 
  */
-Node* createNode(
-	//declaração extendida dos atributos da função
-	int level, 
-	char *word, 
-	char *definition,
-	Node *next,
-	Node *down
-){
+static Node *_createNode(int level, Entry *data, Node *next, Node *down){
+	Node *new = malloc(sizeof(Node));
 
-    Node *new = malloc(sizeof(Node));
-    new->level = level;
-	new->data.word = malloc(sizeof(char) * strlen(word) + 1);
-	new->data.definition = malloc(sizeof(char) * strlen(definition) + 1);
-	strcpy(new->data.word, word);
-	strcpy(new->data.definition, definition);
-    new->next = next;
+	new->level = level;
+	new->data = data;
+	new->next = next;
 	new->down = down;
 
-    return new;
+	return new;
 }
 
-bool search(Skiplist *sl, char *word, bool verbose){
-	Node *aux;
-	// age nas linhas superiores à 0
-	aux = sl->upleft;
+static void _freeNode(Node *node){
+	_freeEntry(node->data);
+	free(node);
+}
 
-	while(aux->level != 0){
-		while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0){	
-			aux = aux->next;
+static void _printEntry(Entry *data){
+	printf("%s %s\n", data->word, data->definition);
+}
+
+static int _getRandNum(int max){
+	int num = 0;
+	while(rand() % 2 != 1 && num < max)
+		num++;
+
+	return num;
+}
+
+static Node *_getUpLeft(Skiplist *sl){
+	return sl->header[sl->level];
+}
+
+static Node *_getNodeData(Skiplist *sl, char *word){
+	Node *curNode = _getUpLeft(sl);
+	while(curNode != NULL){
+		while(curNode->next != NULL && strcmp(curNode->next->data->word, word) < 0){
+			curNode = curNode->next;
 		}
-		aux = aux->down;
-	}
-	
-	// essa parte do código age na linha 0
-	while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
-		aux = aux->next;
-		
-	if(aux->next == NULL)
-		return false;
 
-	if(strcmp(aux->next->data.word, word) == 0){
-		if(verbose == true)	printf(
-			"%s %s\n", 
-			aux->next->data.word, 
-			aux->next->data.definition
-		);
-		return true;
+		if(curNode->next != NULL && strcmp(curNode->next->data->word, word) == 0)
+			return curNode->next;
+
+		curNode = curNode->down;
 	}
-	if(verbose == true)	printf("OPERACAO INVALIDA\n");
-	return false;
+
+	return NULL;
+}
+
+Skiplist *newSkiplist(){
+	Skiplist* sl = malloc(sizeof(Skiplist));
+
+	sl->level = 0;
+	sl->maxlevel = MAX_AMT_LEVEL;
+	sl->header = malloc(sizeof(Node**) * sl->maxlevel);
+
+	Entry *baseEntry = _createEntry(NULL_STRING, NULL_STRING);
+
+	sl->header[0] = _createNode(0, baseEntry, NULL, NULL);
+	for(int i = 1; i < sl->maxlevel; i++)
+		sl->header[i] = _createNode(i, baseEntry, NULL, sl->header[i - 1]);
+
+	return sl;
+}
+
+void search(Skiplist *sl, char *word){
+	Node *searchedNode = _getNodeData(sl, word);
+
+	if(searchedNode != NULL)
+		_printEntry(searchedNode->data);
+	else
+		printf("OPERACAO INVALIDA\n");
 }
 
 void insertEntry(Skiplist *sl, char *word, char *definition){
 	//verifica se o valor já está na skip list
-	if(search(sl, word, false) == true){
+	if(_getNodeData(sl, word) != NULL){
 		printf("OPERACAO INVALIDA\n");
+
+		free(word);
+		free(definition);
+
 		return;
 	}
 
-	//Inicializa variáveis
-	Node *aux;
+	int nodeLevel = _getRandNum(sl->maxlevel - 1);
 
-	//coinflips
-	int nodeLevel = 0;
-	while(rand() % 2 != 1 && nodeLevel < sl->maxlevel)
-		nodeLevel++;
-
-	Node** updates = malloc(sizeof(Node*) * (nodeLevel + 1)); //vetor de updates
-
-	aux = sl->header[nodeLevel];
+	Node **updates = malloc(sizeof(Node*) * (nodeLevel + 1)); //vetor de updates
 
 	//busca do local em que o novo nó deve ser inserido e 
 	//armazenamento dos nós updates
-	while(aux->level != 0){
-		while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
-			aux = aux->next;
-		updates[aux->level] = aux;
-		aux = aux->down;
+	Node *curNode = sl->header[nodeLevel];
+	while(curNode != NULL){
+		while(curNode->next != NULL && strcmp(curNode->next->data->word, word) < 0)
+			curNode = curNode->next;
+
+		updates[curNode->level] = curNode;
+		curNode = curNode->down;
 	}
-	
-	//busca do nó no nível 0
-	while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
-		aux = aux->next;
-	
-	updates[aux->level] = aux;
 
 	// inserção dos nós em níveis já existentes de 
 	// maneira similar a uma lista encadeada
 	
 	// cria o novo nó a ser inserido na skip list
-	int currentLevel = 0;
-	Node *new;
+	int currentLevel = 1;
+
+	Entry *insertedEntry = _createEntry(word, definition);
+	Node *newNode = _createNode(0, insertedEntry, updates[0]->next, NULL);
+	updates[0]->next = newNode;
 
 	// cria nós em níveis acima do 0 se necessário
 	while(currentLevel <= nodeLevel){
+		newNode = _createNode(
+			currentLevel,
+			insertedEntry,
+			updates[currentLevel]->next,
+			newNode
+		);
 
-		new = createNode(currentLevel, word, definition, NULL, NULL);
-		new->maxLevel = nodeLevel;
-		new->next = updates[currentLevel]->next;
-		if(currentLevel == 0)
-			new->down = NULL;
-		else
-			new->down = updates[currentLevel - 1]->next;
-		
-		updates[currentLevel]->next = new;
+		updates[currentLevel]->next = newNode;
 		currentLevel++;
 	}
 
 	if(sl->level < nodeLevel) sl->level = nodeLevel;
-	sl->upleft = sl->header[sl->level];
-	
-	
+
 	free(updates);
 }
 
-void updateEntry(Skiplist *sl, char *word, char *definition){
-	if(search(sl, word, false) == false){
+void updateEntry(Skiplist *sl, char *word, char *newDefinition){
+	Node *searchedNode = _getNodeData(sl, word);
+
+	if(searchedNode == NULL) {
 		printf("OPERACAO INVALIDA\n");
-		return;
+		free(newDefinition);
+	}else{
+		free(searchedNode->data->definition);
+		searchedNode->data->definition = newDefinition;
 	}
-
-	//printf("eu quero atualizar %s\n", word);
-	
-	Node** updates = malloc(sizeof(Node*) * sl->maxlevel); //vetor de updates
-	Node *aux = sl->upleft;
-	
-	while(aux->level != 0){
-		while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
-			aux = aux->next;
-		updates[aux->level] = aux;
-		aux = aux->down;
-	}
-
-	while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
-		aux = aux->next;
-
-	updates[aux->level] = aux;
-
-	int currentLevel = 0;
-	while(currentLevel <= sl->level){
-		//printf("(%d/%d)\n", currentLevel, sl->level);
-		if(updates[currentLevel]->next != NULL && strcmp(updates[currentLevel]->next->data.word, word) == 0)
-			strcpy(updates[currentLevel]->next->data.definition, definition);
-		else {
-			free(updates);
-			return;
-		}
-		
-		currentLevel++;
-	}
-
-	free(updates);
 }
 
 void removeEntry(Skiplist *sl, char *word){
+	Node *searchedNode = _getNodeData(sl, word);
+
 	//verifica se o valor já está na sl e inicialização de var
-	if(search(sl, word, false) == false){
+	if(searchedNode == NULL){
 		printf("OPERACAO INVALIDA\n");
+
 		return;
 	}
-	
+
 	//printSkiplist(sl, "zero");
 
-	Node* aux;
-	aux = sl->upleft;
-	Node** updates = malloc(sizeof(Node*) * sl->maxlevel); //vetor de updates
+	Node **updates = malloc(sizeof(Node *) * (searchedNode->level + 1)); //vetor de updates
 	//busca pelos nós, atualização do vetor de updates
-	
-	while(aux->level != 0){
-		while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
-			aux = aux->next;
-		updates[aux->level] = aux;
-		aux = aux->down;
+	Node *curNode = sl->header[searchedNode->level];
+	while(curNode != NULL){
+		while(curNode->next != NULL && strcmp(curNode->next->data->word, word) < 0)
+			curNode = curNode->next;
+
+		updates[curNode->level] = curNode;
+		curNode = curNode->down;
 	}
-
-	//busca pelo nó anterior ao qual o dado será removido
-	while(aux->next != NULL && strcmp(aux->next->data.word, word) < 0)
-		aux = aux->next;
-
-	updates[aux->level] = aux;
 
 	//realiza remoção de todos os nós de cima para baixo,
 	//de maneira igual a uma lista encadeada
 	int currentLevel = 0;
-	
-	while(currentLevel <= sl->level){
-		if(updates[currentLevel]->next && strcmp(updates[currentLevel]->next->data.word, word) == 0){
-			//printf("removing %s/%s\n", updates[currentLevel]->next->data.word, word);
-			Node* rem = updates[currentLevel]->next;
-			updates[currentLevel]->next = rem->next;
-			free(rem->data.word);
-			free(rem->data.definition);
-			free(rem);
-			
-		}else{
-			break;
-		}
-		currentLevel++;
-	}	
+	while(currentLevel < searchedNode->level){
+		Node* rem = updates[currentLevel]->next;
+		updates[currentLevel]->next = rem->next;
 
-	//remove o nível quando não existe adjacente a upleft, 
-	//diminuindo nível da skip list	
-	// while(sl->header[sl->level]->next != NULL && sl->header[sl->level]->down != NULL){
-	// 	sl->level--;
-	// }
+		free(rem);
+
+		currentLevel++;
+	}
+	updates[searchedNode->level]->next = searchedNode->next;
+	_freeNode(searchedNode);
+
+	while(sl->level > 0 && sl->header[sl->level]->next == NULL)
+		sl->level--;
 
 	free(updates);
 }
 
 void printSkiplist(Skiplist* sl, char *ch1){
-
-    Node *aux = sl->upleft;
+	Node *curNode = _getUpLeft(sl);
 
 	//busca pelo caractere ch1 verticalmente
-	while(aux->level != 0){
-		while(aux->next != NULL && strncmp(aux->next->data.word, ch1, 1) < 0)
-			aux = aux->next;
+	while(curNode->level != 0){
+		while(curNode->next != NULL && strncmp(curNode->next->data->word, ch1, 1) < 0)
+			curNode = curNode->next;
 
-		aux = aux->down;
+		curNode = curNode->down;
 	}
 
 	//busca pelo caractere no nível 0
-	while(aux->next != NULL && strncmp(aux->next->data.word, ch1, 1) < 0)
-		aux = aux->next;
+	while(curNode->next != NULL && strncmp(curNode->next->data->word, ch1, 1) < 0)
+		curNode = curNode->next;
 
-	if(strncmp(aux->next->data.word, ch1, 1) > 0){
+	if(strncmp(curNode->next->data->word, ch1, 1) > 0){
 		printf("NAO HA PALAVRAS INICIADAS POR %c", ch1[0]);
 		return;
 	}
@@ -266,56 +255,42 @@ void printSkiplist(Skiplist* sl, char *ch1){
 	
 	//imprime todas palavras até que a primeira letra seja diferente
 	//do caractere definido
-	while(aux != NULL && strncmp(aux->next->data.word, ch1, 1) == 0){
-		aux = aux->next;
-        printf("%s %s\n", aux->data.word, aux->data.definition);
+	while(curNode != NULL && strncmp(curNode->next->data->word, ch1, 1) == 0){
+		curNode = curNode->next;
+		printf("%s %s\n", curNode->data->word, curNode->data->definition);
 	}
-
 }
 
-void freeList(Skiplist* sl){
+void freeSkipList(Skiplist* sl){
 	//verifica se o valor já está na sl e inicialização de var
 	if(sl == NULL)
 		return;
 
 	int level = sl->maxlevel - 1;
+	while(level > 0){
+		Node *curNode = sl->header[level];
+		while(curNode && curNode->next != NULL){
+			Node *nextNode = curNode->next;
+			free(curNode);
 
-	Node *aux = sl->header[level];
-	Node *rem;
-
-	while(level != 0){
-		aux = sl->header[level];
-		rem = aux;
-		while(aux && aux->next != NULL){
-			aux = aux->next;
-			free(rem->data.word);
-			free(rem->data.definition);
-			free(rem);
-			rem = aux;
+			curNode = nextNode;
 		}
-
-		free(rem->data.word);
-		free(rem->data.definition);
-		free(rem);
+		free(curNode);
 
 		level--;
-		aux = sl->header[level];
-		// "TRAGA-ME LEAKS NO VALGRIND E CORRIGI-LOS-EI"
 	}
 
-	rem = aux;
-	while(aux->next != NULL){
-		aux = aux->next;
-		free(rem->data.word);
-		free(rem->data.definition);
-		free(rem);
-		rem = aux;
-	}
+	Node *curNode = sl->header[0]->next;
+	free(sl->header[0]->data);
+	free(sl->header[0]);
 
-	// ultimo nó
-	free(rem->data.word);
-	free(rem->data.definition);
-	free(rem);
+	while(curNode && curNode->next != NULL){
+		Node *nextNode = curNode->next;
+		_freeNode(curNode);
+
+		curNode = nextNode;
+	}
+	_freeNode(curNode);
 
 	free(sl->header);
 	free(sl);

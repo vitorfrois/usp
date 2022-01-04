@@ -6,6 +6,9 @@ all: $(objects)
 run:
 	./main
 
+valgrind:
+	valgrind --leak-check=full ./main
+
 linkedList.o: linkedList.h
 myString.o: myString.h
 main.o: linkedList.h myString.h

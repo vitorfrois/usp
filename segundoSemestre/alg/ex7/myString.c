@@ -3,7 +3,7 @@
 #include <string.h>
 #include "myString.h"
 
-char* readString(int separator){
+char* readString(){
     //printf("reading string... ");
     int arguments;
     
@@ -15,10 +15,7 @@ char* readString(int separator){
         string = realloc(string, (nCharsString + 1) * sizeof(char*));
         string[nCharsString] = character;
         nCharsString++;
-
-        if(separator == 1) arguments = character != '\n' && character != ' ' && character != EOF && character != '\r';
-        else if(separator == 0) arguments = character != '\n' && character != EOF && character != '\r';
-    } while(arguments);
+    } while(arguments = character != '\n' && character != ' ' && character != EOF && character != '\r');
     if(character == EOF)
         return "EOF";
     if(character == '\r')

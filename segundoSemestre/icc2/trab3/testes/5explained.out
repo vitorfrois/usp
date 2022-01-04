@@ -1,0 +1,52 @@
+Time = 1 - - - - - - - - - -
+Inserting Process 333, priority=4, tf=5
+Inserting Process 1571, priority=3, tf=3
+Current order after insertions:
+333 (tf=5, p=4) -> 1571 (tf=3, p=3) -> 
+
+Time = 2 - - - - - - - - - -
+Inserting Process 903, priority=2, tf=1
+Current order after insertions:
+1571 (tf=3, p=3) -> 903 (tf=1, p=2) -> 333 (tf=4, p=4) -> 
+
+Time = 3 - - - - - - - - - -
+Current order after insertions:
+903 (tf=1, p=2) -> 333 (tf=4, p=4) -> 1571 (tf=2, p=3) -> 
+Process 903 Done in t=3, run.codes output: 903 3
+
+Time = 4 - - - - - - - - - -
+Current order after insertions:
+333 (tf=4, p=4) -> 1571 (tf=2, p=3) -> 
+
+Time = 5 - - - - - - - - - -
+Inserting Process 227, priority=1, tf=2
+Current order after insertions:
+1571 (tf=2, p=3) -> 
+
+Time = 6 - - - - - - - - - -
+Current order after insertions:
+227 (tf=2, p=1) -> 333 (tf=3, p=4) -> 1571 (tf=1, p=3) -> 
+
+Time = 7 - - - - - - - - - -
+Current order after insertions:
+333 (tf=3, p=4) -> 1571 (tf=1, p=3) -> 
+
+Time = 8 - - - - - - - - - -
+Current order after insertions:
+1571 (tf=1, p=3) -> 
+Process 1571 Done in t=8, run.codes output: 1571 8
+
+Time = 9 - - - - - - - - - -
+Current order after insertions:
+227 (tf=1, p=1) -> 333 (tf=2, p=4) -> 
+Process 227 Done in t=9, run.codes output: 227 9
+
+Time = 10 - - - - - - - - - -
+Current order after insertions:
+333 (tf=2, p=4) -> 
+
+Time = 11 - - - - - - - - - -
+Current order after insertions:
+333 (tf=1, p=4) -> 
+Process 333 Done in t=11, run.codes output: 333 11
+

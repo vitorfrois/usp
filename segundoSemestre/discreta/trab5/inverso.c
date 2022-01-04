@@ -1,21 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "inverso.h"
 
-//As variáveis usadas estão em Long Long Int para permitir
-//a entrada de valores maiores
-typedef long long int llint;
-
-/**
- * @brief O algoritmo estendido de euclides (AEE) realiza\n
- * operações MDC/GCD sucessivas até encontrar gcd = 1,
- * isto é, quando b%a=0.            
- * @param a termo 1
- * @param b termo 2
- * @param x variável para armazenar coeficientes
- * @param y variável para armazenar coeficientes
- * @return o resultado do algoritmo estendido de euclides entre a e b
- */
 llint euclides(llint a, llint b, llint* x, llint* y){
     // Considere a equação 
     // (a*x)+(b*y)=1
@@ -48,12 +35,6 @@ llint euclides(llint a, llint b, llint* x, llint* y){
     return gcd;
 }
 
-/**
- * @brief Calcula o inverso de a em Zm baseado no Algoritmo Estendido de Euclides
- * 
- * @param a 
- * @param m 
- */
 void inverso(llint a, llint m){
     llint x, y;
     int mdc = euclides(a, m, &x, &y);
@@ -69,21 +50,4 @@ void inverso(llint a, llint m){
         x = (x % m + m)%m;
         printf("\n\nO inverso de %lld em %lldZ é %lld.", a, m, x);
     }
-}
-
-
-int main(int argc, char* argv[]) {
-    char* ptr;
-    //Caso a função seja chamada de forma errada, o usuário é avisado
-    if(argc != 3){
-        printf("Utilização do programa:\n");
-        printf("./main d a\n");
-        printf("O programa busca o inverso de a em Zd,\n");
-        printf("tal que ax¹ = 1 (mod n)");
-        return 0;
-    }
-    
-    inverso(strtol(argv[2], &ptr, 10), strtol(argv[1], &ptr, 10));
-    
-	return 0;
 }

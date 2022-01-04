@@ -1,0 +1,56 @@
+Time = 1 - - - - - - - - - -
+Inserting Process 27, priority=4, tf=3
+Inserting Process 3, priority=3, tf=3
+Inserting Process 15, priority=2, tf=3
+Inserting Process 325, priority=4, tf=3
+Current order after insertions:
+27 (tf=3, p=4) -> 325 (tf=3, p=4) -> 3 (tf=3, p=3) -> 15 (tf=3, p=2) -> 
+
+Time = 2 - - - - - - - - - -
+Current order after insertions:
+325 (tf=3, p=4) -> 3 (tf=3, p=3) -> 15 (tf=3, p=2) -> 27 (tf=2, p=4) -> 
+
+Time = 3 - - - - - - - - - -
+Current order after insertions:
+3 (tf=3, p=3) -> 15 (tf=3, p=2) -> 27 (tf=2, p=4) -> 325 (tf=2, p=4) -> 
+
+Time = 4 - - - - - - - - - -
+Current order after insertions:
+15 (tf=3, p=2) -> 27 (tf=2, p=4) -> 325 (tf=2, p=4) -> 3 (tf=2, p=3) -> 
+
+Time = 5 - - - - - - - - - -
+Current order after insertions:
+27 (tf=2, p=4) -> 325 (tf=2, p=4) -> 3 (tf=2, p=3) -> 15 (tf=2, p=2) -> 
+
+Time = 6 - - - - - - - - - -
+Current order after insertions:
+325 (tf=2, p=4) -> 3 (tf=2, p=3) -> 15 (tf=2, p=2) -> 27 (tf=1, p=4) -> 
+
+Time = 7 - - - - - - - - - -
+Current order after insertions:
+3 (tf=2, p=3) -> 15 (tf=2, p=2) -> 27 (tf=1, p=4) -> 325 (tf=1, p=4) -> 
+
+Time = 8 - - - - - - - - - -
+Current order after insertions:
+15 (tf=2, p=2) -> 27 (tf=1, p=4) -> 325 (tf=1, p=4) -> 3 (tf=1, p=3) -> 
+
+Time = 9 - - - - - - - - - -
+Current order after insertions:
+27 (tf=1, p=4) -> 325 (tf=1, p=4) -> 3 (tf=1, p=3) -> 15 (tf=1, p=2) -> 
+Process 27 Done in t=9, run.codes output: 27 9
+
+Time = 10 - - - - - - - - - -
+Current order after insertions:
+325 (tf=1, p=4) -> 3 (tf=1, p=3) -> 15 (tf=1, p=2) -> 
+Process 325 Done in t=10, run.codes output: 325 10
+
+Time = 11 - - - - - - - - - -
+Current order after insertions:
+3 (tf=1, p=3) -> 15 (tf=1, p=2) -> 
+Process 3 Done in t=11, run.codes output: 3 11
+
+Time = 12 - - - - - - - - - -
+Current order after insertions:
+15 (tf=1, p=2) -> 
+Process 15 Done in t=12, run.codes output: 15 12
+

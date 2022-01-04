@@ -6,6 +6,9 @@ all: $(objects)
 run:
 	./main
 
+valgrind:
+	valgrind ./main
+
 linkedList.o: linkedList.h
 main.o: linkedList.h
 
