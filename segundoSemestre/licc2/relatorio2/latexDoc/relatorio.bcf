@@ -2344,7 +2344,9 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">references.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">moacir</bcf:citekey>
+    <bcf:citekey order="1">heapSort</bcf:citekey>
+    <bcf:citekey order="2">mitvideo</bcf:citekey>
+    <bcf:citekey order="3">moacir</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

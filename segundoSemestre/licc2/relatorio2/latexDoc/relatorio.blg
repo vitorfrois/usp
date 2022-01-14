@@ -1,15 +1,15 @@
-[0] Config.pm:312> INFO - This is Biber 2.15
-[0] Config.pm:315> INFO - Logfile is 'relatorio.blg'
-[108] biber:330> INFO - === qui dez 30, 2021, 15:17:41
-[130] Biber.pm:415> INFO - Reading 'relatorio.bcf'
-[223] Biber.pm:952> INFO - Found 1 citekeys in bib section 0
-[239] Biber.pm:4334> INFO - Processing section 0
-[253] Biber.pm:4523> INFO - Looking for bibtex format file 'references.bib' for section 0
-[254] bibtex.pm:1682> INFO - LaTeX decoding ...
-[258] bibtex.pm:1494> INFO - Found BibTeX data source 'references.bib'
-[308] UCollate.pm:68> INFO - Overriding locale 'pt-BR' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[308] UCollate.pm:68> INFO - Overriding locale 'pt-BR' defaults 'variable = shifted' with 'variable = non-ignorable'
-[309] Biber.pm:4162> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'pt-BR'
-[309] Biber.pm:4168> INFO - No sort tailoring available for locale 'pt-BR'
-[316] bbl.pm:651> INFO - Writing 'relatorio.bbl' with encoding 'UTF-8'
-[317] bbl.pm:754> INFO - Output to relatorio.bbl
+[0] Config.pm:311> INFO - This is Biber 2.16
+[0] Config.pm:314> INFO - Logfile is 'relatorio.blg'
+[84] biber:340> INFO - === qua jan 12, 2022, 19:56:40
+[100] Biber.pm:415> INFO - Reading 'relatorio.bcf'
+[166] Biber.pm:952> INFO - Found 3 citekeys in bib section 0
+[179] Biber.pm:4340> INFO - Processing section 0
+[190] Biber.pm:4531> INFO - Looking for bibtex format file 'references.bib' for section 0
+[191] bibtex.pm:1689> INFO - LaTeX decoding ...
+[194] bibtex.pm:1494> INFO - Found BibTeX data source 'references.bib'
+[245] UCollate.pm:68> INFO - Overriding locale 'pt-BR' defaults 'variable = shifted' with 'variable = non-ignorable'
+[246] UCollate.pm:68> INFO - Overriding locale 'pt-BR' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[246] Biber.pm:4168> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'pt-BR'
+[246] Biber.pm:4174> INFO - No sort tailoring available for locale 'pt-BR'
+[253] bbl.pm:654> INFO - Writing 'relatorio.bbl' with encoding 'UTF-8'
+[255] bbl.pm:757> INFO - Output to relatorio.bbl

@@ -121,8 +121,8 @@
 \maketitle
 
 \begin{abstract}
-    %%%%%% Contextualize o seu trabalho. %%%%%%%
-
+  %%%%%% Contextualize o seu trabalho. %%%%%%%
+  No módulo 2 da disciplina de LICC2 buscamos analisar métodos de ordenação mais complexos que os tradicionais Bubble, Insertion e Merge, que podem ter complexidade de até $O(n^2)$. Aqui, Heap e Quick buscam o limite inferior de $O(n\log n)$. Na parte de metodologia são feitos os cálculos para provar esse valor enquanto na parte de resultados é possível comparar o que foi feito aqui com outros métodos e confirmar que a complexidade perfoma como esperado.
 \end{abstract}
 
 \rule{\linewidth}{0.2pt}
@@ -141,10 +141,10 @@
     Essa é uma estrutura semelhante a uma árvore binária, mas também pode ser 
     representada através de um vetor. 
     \\ No algoritmo, os elementos são posicionados em max heap, operação que possui 
-    complexidade $O(\log n)$. 
+    complexidade $O(\log n)$ \cite{heapSort}. 
     \lstinputlisting[linerange={39-55}]{sorts.c}
     Então, troca os elementos $[1];[n]$ de posição e descarta
-    o último elemento ao diminuir o tamanho $n$ do vetor. 
+    o último elemento ao diminuir o tamanho $n$ do vetor \cite{mitvideo}. 
     \lstinputlisting[linerange={60-63}]{sorts.c}
     Novas chamadas 
     recursivas são executadas até que o vetor esteja completamente ordenado.
@@ -152,7 +152,7 @@
     a complexidade é $O(n) \times O(\log n) = O(n\log n)$.
     Já que independente dos casos o mesmo algoritmo sempre é executado, 
     o pior caso é igual ao maior caso.
-    A complexidade de espaço é $O(1)$, apenas para os \textit{swaps}.
+    A complexidade de espaço é $O(1)$, usada apenas para os \textit{swaps}.
 
   \subsection{Quick Sort}
     Já o Quick Sort é um algoritmo de ordenação muito eficiente que utiliza pivôs para ordenação. 
@@ -220,11 +220,13 @@
       \caption{Pior caso do Quick Sort}
       \label{fig:worse}
     \end{figure}
-    Assim, pode se observar que em seu pior caso, o Quick Sort realmente 
-    apresenta complexidade $O(n^2)$, enquanto o Heap continua com pior caso
+    Assim, pode se observar que em seu pior caso, o Quick Sort realmente  apresenta complexidade $O(n^2)$, enquanto o Heap continua com pior caso
     $O(n \log n)$.
   \subsection{Comparação com métodos anteriores}
-    Ao comparar com os métodos anteriores, o gráfico do caso médio fica como esperado
+    Ao comparar com os métodos anteriores, o gráfico do caso médio se porta como esperado
+    Nota-se que o Insertion dispara, enquanto os métodos que possuem complexidade $O(n\log n)$
+    ficam próximos. A pequena diferença entre eles se dá pelas constantes, como já comentado
+    anteriormente.
     \begin{figure}[H]
       \includegraphics[width=\textwidth]{allgraphs.png} 
       \caption{Todos métodos de ordenação}
@@ -234,9 +236,12 @@
   \section{Conclusão}
   %%%%%% Conclusão do relatório. O que você aprendeu nessa tarefa? %%%%%%
   Concluímos ao longo do relatório que os dois algoritmos são muito eficientes,
-  porém, o Heap é tem uma garantia maior de complexidade. Para usar o Quick Sort,
+  porém, o Heap é tem uma garantia maior de complexidade baixa. Para usar o Quick Sort,
   é essencial garantir que o pivô escolhido seja bom, caso contrário sua 
-  complexidade dispara, tornando-se igual ao Insertion ou Bubble.
+  complexidade dispara, tornando-se $O(n^2)$.
+  \\ É também possível observar que as análises feitas na seção de Metodologias 
+  tiveram seus resultados confirmados, sendo mais fácil constatar ao comparar
+  os algoritmos do segundo módulo com os do primeiro.
   \\ Ainda assim, cada método possui sua particularidade, e analisar um problema
   e suas nuances antes de escolher um algoritmo para resolver é essencial.
 \printbibliography[heading=bibintoc, title={Referências}]
