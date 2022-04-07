@@ -1,3 +1,5 @@
+#to run, use manin main.py
+
 import random
 from random import random
 from array import *
