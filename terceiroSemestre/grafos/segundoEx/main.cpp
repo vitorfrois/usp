@@ -4,6 +4,22 @@
 
 using namespace std;
 
+void printMatrix(int **matrix, int size){
+	for(int i = 0; i < size; i++){
+		for(int j = 0; j < size; j++)
+			cout << matrix[i][j] << " ";
+		cout << endl;
+	}
+}
+
+void printList(list<int> const &list){
+	cout << "(";
+    for (auto const &i: list) {
+        cout << i << ',';
+    }
+	cout << ")" << endl;
+}
+
 //Essa classe representa um grafo usando lista de adjacência.
 class Graph{
 	//Número de vértices
@@ -23,69 +39,48 @@ public:
 		adj[a].push_back(b);
 	}
 
-	void BFS(int s, int **matrix){
+	void BFS(int raiz, int **matrix){
+		//Cria uma fila para BFS e insere o primeiro elemento
+		list<int> queue;
+		queue.push_back(raiz);
+
 		//Marca todos vértices como
 		//não visitados
 		vector <bool> visitados;
 		visitados.resize(V, false);
 
-		//Cria uma fila para BFS
-		list<int> queue;
-
-		//Marca o nó atual como 
-		visitados[s] = true;
-		queue.push_back(s);
-
 		int distancia = 0;
-	
-		recursive()
-
-		while(!queue.empty()){
+		bool nivel = true;
+		while(!queue.empty()){	
 			//Retira vértice da lista e imprime
-			s = queue.front();
-			cout << s << " ";
+			int vertice = queue.front();
 			queue.pop_front();
+			visitados[vertice] = true;
+
+			//Como a busca é feita através de níveis,
+			//deve-se incrementar a distância percorrida apenas
+			//quando um novo nível for alcançado
+			if(nivel){
+				distancia++;
+				nivel = false;
+			} 
 
 			//Pega todos os vértices adjacentes.
 			//Se algum não tiver sido visitado,
 			//marca como visitado e coloca-o
 			//na fila
-			distancia++;
-			for(auto adjacent: adj[s]){
+			for(auto adjacent: adj[vertice]){
 				if(!visitados[adjacent]){
-					cout << "i";
 					visitados[adjacent] = true;
 					queue.push_back(adjacent);
-					// distancia++;
-					matrix[s][adjacent] = distancia;
-					matrix[adjacent][s] = distancia;
-				}else{
-					cout << "u";
+					nivel = true;
+					//Grava a distância na matriz
+					matrix[raiz][adjacent] = distancia;
+					matrix[adjacent][raiz] = distancia;
 				}
 			}
 		}
-		cout << endl;
 	}
-
-	void recursive(queue<int> &queue, vector<bool> &visitados){
-		if(queue.empty())
-			return;
-
-		int v = queue.front();
-		queue.pop();
-		cout << v << " ";
-
-		for(auto adjacent: adj[s]){
-			if(!visitados[adjacent]){
-				visitados[adjacent] = true;
-				queue.push_back(adjacent);
-			}
-		}
-		recursive();
-
-	}
-
-
 };
 
 int main(){
@@ -93,7 +88,7 @@ int main(){
 	string arquivo;
 	char s[20];
 	//Abre o arquivo para leitura
-	cout << "Insira o nome do arquivo a ser lido: ";
+	// cout << "Insira o nome do arquivo a ser lido: ";
 	cin >> arquivo;
 	arquivo = ".pajek/" + arquivo;
 
@@ -102,7 +97,7 @@ int main(){
 	int V = 0;
 	fscanf(fp, "%s %d", s, &V);
 	fscanf(fp, "%s", s);
-	cout << "v = " << V << endl;
+	// cout << "v = " << V << endl;
 	//Cria um grafo com V vértices
 	Graph g(V);
 	int a = 0, b;
@@ -113,23 +108,20 @@ int main(){
 		//índice 0
 		g.adicionarAresta(--a, --b);
 		g.adicionarAresta(b, a);
-		cout << a << " " << b << endl;
 	}
 
 	int **matrix = new int*[V];
 	for(int i = 0; i < V; i++)
 		matrix[i] = new int[V];
 
-	cout << "bfs = ";
 	for(int i = 0; i < V; i++)
 		g.BFS(i, matrix);
 	
-	for(int i = 0; i < V; i++){
-		for(int j = 0; j < V; j++)
-			cout << matrix[i][j];
-		cout << endl;
-	}
+	printMatrix(matrix, V);
 
+	for(int i = 0; i < V; i++)
+		delete [] matrix[i];
+	delete [] matrix;
 	fclose(fp);
 	return 0;
 
