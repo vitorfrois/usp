@@ -19,10 +19,19 @@ def main():
         print("2 - REMOVER")
         print("3 - PESQUISAR")
         print("4 - IMPRIMIR")
-        opcao = int(input("Escolha uma opção: "))
-        
+        try:
+            opcao = int(input("Escolha uma opção: "))
+        except:
+            print("Insira um inteiro")
+            
         if(opcao == ADICIONAR):
-            entrada = int(input("Digite 1 para físico e 2 para jurídico: "))
+            entrada = -1
+            while(entrada != 1 and entrada != 2):
+                try:
+                    entrada = int(input("Digite 1 para físico e 2 para jurídico: "))
+                except:
+                    print("Insira 1 ou 2! ")
+                    entrada = -1
             nome = input("Nome: ")
             endereço = input("Endereço: ") 
             email = input("email: ") 

@@ -2,8 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f84dba59-5b44-4e33-bfb2-9da2957e1a15" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../bozo/src/Random.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../grafos/primeiroEx/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../../grafos/primeiroEx/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../arquivos/Exercicio1/src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../arquivos/Exercicio1/src/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../arquivos/Exercicio1/src/person.c" beforeDir="false" afterPath="$PROJECT_DIR$/../../arquivos/Exercicio1/src/person.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../orgComp/fakGit" beforeDir="false" afterPath="$PROJECT_DIR$/../../orgComp/fakGit" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MeuPrograma.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../SegundoPrograma.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../videopoker/aposta.py" beforeDir="false" afterPath="$PROJECT_DIR$/../videopoker/aposta.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../videopoker/baralho.py" beforeDir="false" afterPath="$PROJECT_DIR$/../videopoker/baralho.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../videopoker/hand.py" beforeDir="false" afterPath="$PROJECT_DIR$/../videopoker/hand.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../videopoker/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../videopoker/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,19 +43,6 @@
     <configuration name="Random" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Random" />
       <module name="bozo" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="bozo" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="bozo" />
-      <option name="filePath" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>

@@ -3,9 +3,11 @@ import random
 class Baralho: 
     ultima = {} 
     
+    #embaralha a lista de cartas
     def embaralhar(self):
         random.shuffle(self.carta)
     
+    #cria e inicializa uma lista de cartas
     def __init__(self):
         self.carta = []
         for i in range(4):
@@ -16,19 +18,12 @@ class Baralho:
                 })    
         self.embaralhar()
 
+    #pega uma nova carta da lista de cartas
     def pegarCarta(self):
         self.ultima = self.carta.pop()
         return self.ultima
 
-    def pegarUltima(self):
-        return self.ultima
-
-    def main():
-        baralho = Baralho()
-        baralho.embaralhar()
-        print(baralho.pegarCarta())
-        print(baralho.pegarCarta())
-
+#função que retorna a representação visual de cada carta
 def cartaToString(carta):
     if(carta["valor"] == 0):
         if(carta["naipe"] == 0): return "🂢"

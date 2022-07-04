@@ -1,7 +1,9 @@
 class Aposta:
     def __init__(self):
         pass
-        
+    
+    #a seguir, estão listadas funções booleanas que retornam
+    #verdadeiro se a condição foi cumprida pelas cartas
     def DoisPares(self, contagem):
         count = 0
         for i in range(13):
@@ -75,7 +77,9 @@ class Aposta:
             return True
         return False
 
-            
+        
+    #a função retorno checa as maiores apostas primeiro 
+    # e retorna (aposta * dinheiro)
     def retorno(self, cartas, dinheiro):
         self.contagem = []
         for i in range(13):
@@ -101,7 +105,4 @@ class Aposta:
             return dinheiro
         else:
             return 0
-
-        #com o vetor de contagem é possível analisar
-        #as apostas
         

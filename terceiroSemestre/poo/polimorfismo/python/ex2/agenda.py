@@ -16,10 +16,16 @@ class Agenda():
         self.agenda = []    
 
     def adicionar(self, p:Contato):
-        self.agenda.append(p)
+        #o método utilizado é insertion sort
+        i = 0
+        while(i < len(self.agenda)):
+            if(metodo(p) < metodo(self.agenda[i])):
+                break
+            i += 1            
+        self.agenda.insert(i, p)
 
     def imprimirTudo(self):
-        self.agenda.sort(key=metodo, reverse=True)
+        # self.agenda.sort(key=metodo, reverse=True)
         if(len(self.agenda) != 0):
             for pessoa in self.agenda:
                 pessoa.__str__()
