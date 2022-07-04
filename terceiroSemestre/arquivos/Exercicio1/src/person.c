@@ -7,6 +7,7 @@
 #define SKIPSIZE 238
 typedef struct PERSON Person;
 
+//function when a person is created
 Person initalizePerson(){
     Person size;
     size.firstName = 51;
@@ -17,12 +18,14 @@ Person initalizePerson(){
     return size;
 }
 
+//print a persons single feature
 void printFeature(FILE *fp, char * featureName, int featureSize){
     char feature[featureSize];
     fread(&feature, 1, featureSize, fp);
     printf("%s%s\n", featureName, feature);
 }
 
+//print a person
 void printPerson(FILE *fp){
     Person size = initalizePerson();
     printFeature(fp, "Firstname: ", size.firstName);
@@ -34,10 +37,12 @@ void printPerson(FILE *fp){
     printf("Age: %d\n\n", age);
 }
 
+//receive a feature input
 void inputFeature(FILE *fp, int featureSize){
     readFixedSizeString(fp, featureSize); 
 }
 
+//receive person input
 void inputPerson(FILE *fp){
     Person size = initalizePerson();
     getchar(); 

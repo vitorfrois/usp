@@ -12,9 +12,11 @@
 
 int main(){
     int command;
+    //read command (write, print or read)
     scanf("%d", &command);
     char pathname[30], filename[15];
     strcpy(pathname, "binarios/");
+    //scan and open file with "filename"
     scanf("%s", filename);
     strcat(pathname, filename);
     FILE *fp;
