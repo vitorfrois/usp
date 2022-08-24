@@ -1,0 +1,6 @@
+[submodule "terceiroSemestre/poo/urna-eletronica"]
+	path = terceiroSemestre/poo/urna-eletronica
+	url = git@github.com:vitorfrois/urna-eletronica.git
+[submodule "terceiroSemestre/arquivos/Arquivos-TrabalhoFinal"]
+	path = terceiroSemestre/arquivos/Arquivos-TrabalhoFinal
+	url = git@github.com:vitorfrois/Arquivos-TrabalhoFinal.git
