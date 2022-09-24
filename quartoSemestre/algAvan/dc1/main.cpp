@@ -1,5 +1,5 @@
 #include <iostream>
-#include <set>
+#include <list>
 
 using namespace std;
 
@@ -9,13 +9,19 @@ int main(){
 	for(int i = 0; i < nCases; i++){
 		int lenght, elem; 
 		cin >> lenght;
-		multiset<int> numbers;
-		multiset<int>::iterator it = numbers.begin();
+		list<int> numbers;
+		list<int>::iterator it;
 		int s = 0;
 		for(int j = 0; j < lenght; j++){
+			int k = 0;
 			cin >> elem;
-			it = numbers.insert(numbers.lower_bound(elem), elem);
-			s += distance(it, numbers.end()) - 1;
+			it = numbers.begin();
+			while(it != numbers.end() && elem > *it){
+				it++; 
+				k++;
+			}
+			s += (j - k);
+			numbers.insert(it, elem);
 			// cout << s << endl;
 		}
 		cout << s << endl;
