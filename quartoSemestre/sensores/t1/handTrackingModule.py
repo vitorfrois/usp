@@ -35,7 +35,6 @@ while True:
 
                 else:
                     direction = (handLms.landmark[8].y - old_y) 
-                    
                     if(direction > 0):
                         keyboard.send('page up')
                         command = "Page Up"
