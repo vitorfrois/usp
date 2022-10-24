@@ -79,28 +79,26 @@ class HandTracking:
         self.counting = False
         self.tolerance = 0.25
 
-    
+    def pinchVerification(self, handLms):
+        return (distance(handLms.landmark[8], handLms.landmark[12], self.distance_coef) < self.tolerance
+                and distance(handLms.landmark[4], handLms.landmark[14], self.distance_coef) < 2*self.tolerance
+                and distance(handLms.landmark[8], handLms.landmark[14], self.distance_coef) > self.tolerance*3)
 
-    def pinchVerification(self, handLms, distance_coef):
-        return (distance(handLms.landmark[8], handLms.landmark[12], distance_coef) < self.tolerance
-                and distance(handLms.landmark[4], handLms.landmark[14], distance_coef) < 2*self.tolerance
-                and distance(handLms.landmark[8], handLms.landmark[14], distance_coef) > self.tolerance*3)
+    def middleFingerVerification(self, handLms):
+        return (distance(handLms.landmark[8], handLms.landmark[12], self.distance_coef) > self.tolerance*3
+                and distance(handLms.landmark[4], handLms.landmark[14], self.distance_coef) < self.tolerance)
 
-    def middleFingerVerification(self, handLms, distance_coef):
-        return (distance(handLms.landmark[8], handLms.landmark[12], distance_coef) > self.tolerance*3
-                and distance(handLms.landmark[4], handLms.landmark[14], distance_coef) < self.tolerance)
+    def highFiveVerification(self, handLms):
+        return (distance(handLms.landmark[8], handLms.landmark[12], self.distance_coef) < self.tolerance*3
+                and distance(handLms.landmark[12], handLms.landmark[16], self.distance_coef) < self.tolerance*3
+                and distance(handLms.landmark[16], handLms.landmark[20], self.distance_coef) < self.tolerance*3
+                and distance(handLms.landmark[12], handLms.landmark[0], self.distance_coef) > self.tolerance*5)
 
-    def highFiveVerification(self, handLms, distance_coef):
-        return (distance(handLms.landmark[8], handLms.landmark[12], distance_coef) < self.tolerance*3
-                and distance(handLms.landmark[12], handLms.landmark[16], distance_coef) < self.tolerance*3
-                and distance(handLms.landmark[16], handLms.landmark[20], distance_coef) < self.tolerance*3
-                and distance(handLms.landmark[12], handLms.landmark[0], distance_coef) > self.tolerance*5)
-
-    def okVerification(self, handLms, distance_coef):
-        return (distance(handLms.landmark[8], handLms.landmark[6], distance_coef) < self.tolerance*2
-                and distance(handLms.landmark[12], handLms.landmark[10], distance_coef) < self.tolerance*2
-                and distance(handLms.landmark[16], handLms.landmark[14], distance_coef) < self.tolerance*2
-                and distance(handLms.landmark[17], handLms.landmark[4], distance_coef) > self.tolerance*5)
+    def okVerification(self, handLms):
+        return (distance(handLms.landmark[8], handLms.landmark[6], self.distance_coef) < self.tolerance*2
+                and distance(handLms.landmark[12], handLms.landmark[10], self.distance_coef) < self.tolerance*2
+                and distance(handLms.landmark[16], handLms.landmark[14], self.distance_coef) < self.tolerance*2
+                and distance(handLms.landmark[17], handLms.landmark[4], self.distance_coef) > self.tolerance*5)
 
     def main_loop(self, show_video=True):
         while True:
@@ -113,38 +111,38 @@ class HandTracking:
             if results.multi_hand_landmarks:
                 for handLms in results.multi_hand_landmarks: # working with each hand
                     self.mpDraw.draw_landmarks(image, handLms, self.mpHands.HAND_CONNECTIONS)
-                    distance_coef = distance(handLms.landmark[0], handLms.landmark[9], 1)
-                    pinch = self.pinchVerification(handLms, distance_coef)
-                    highFive = self.highFiveVerification(handLms, distance_coef)
-                    ok = self.okVerification(handLms, distance_coef)
+                    self.distance_coef = distance(handLms.landmark[0], handLms.landmark[9], 1)
+                    pinch = self.pinchVerification(handLms)
+                    highFive = self.highFiveVerification(handLms)
+                    ok = self.okVerification(handLms)
                     if(pinch):
                         print("to aqui")
                         coordinates = handLms.landmark[8]
-                        x = screenx * (1-coordinates.x)
-                        y = screeny*coordinates.y
+                        x = self.screenx * (1-coordinates.x)
+                        y = self.screeny * coordinates.y
                         mouse.move(x, y, absolute=True)
                         # print(x, y)
-                        gesture = "pinch"
+                        self.gesture = "pinch"
 
-                    if(highFive and gesture != "high five"):
-                        if(not counting):
+                    if(highFive and self.gesture != "high five"):
+                        if(not self.counting):
                             now = time.time()
-                            counting = True
-                        if(counting and start - now > 0.2):
-                            gesture = "high five"
+                            self.counting = True
+                        if(self.counting and start - now > 0.2):
+                            self.gesture = "high five"
                             mouse.click()
                             print("click!")
-                            counting = False
+                            self.counting = False
                             
-                    if(ok and gesture != "ok"):
-                        if(not counting):
+                    if(ok and self.gesture != "ok"):
+                        if(not self.counting):
                             now = time.time()
-                            counting = True
-                        if(counting and start - now > 0.2):
-                            gesture = "ok"
-                            counting = False
+                            self.counting = True
+                        if(self.counting and start - now > 0.2):
+                            self.gesture = "ok"
+                            self.counting = False
                     if(not pinch and not highFive and not ok):
-                        gesture = "none"
+                        self.gesture = "none"
             
             if(show_video): 
                 self.show_image(image)   
