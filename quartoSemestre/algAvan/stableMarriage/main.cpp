@@ -4,48 +4,45 @@
 
 using namespace std;
 
-int N;
-
-int **readPreferences(){
-    int **pref = (int **) malloc(sizeof(int*) * (N));
-    for(int i = 0; i < (N); i++)
-        pref[i] = (int *) malloc(sizeof(int) * N);
-    
+vector<vector<int>> readPreferences(int N){
+    vector<vector<int>> pref;
     
     for(int j = 0; j < N; j++){
         int person, value; 
         cin >> person;
-        cout << person << " ";
+        vector<int> v;
         for(int k = 0; k < N; k++){
             cin >> value;
-            cout << value << " ";
-            pref[j][k] = value;
+            v.push_back(value - 1);
         }
-        cout << endl;
+        pref.push_back(v);
     }
-    cout << "retornando" << endl;
     return pref;
 }
 
 //return true if the woman with preferences q
 //prefers m1 more than m2
-bool preference(int *pref, int m1, int m2){
-    for(int i = 0; i < N; i++){
+bool preference(vector<int> pref, int m1, int m2, int N){
+    int i = 0;
+    for(i = 0; i < N; i++){
         if(pref[i] == m1)
             return true;
         if(pref[i] == m2)
             return false;
     }
-    return -1;
+    cout << "uai";
+    return true;
 }
 
-void stableMarriage(int **mPref, int **wPref){
-    cout << "penis";
+void stableMarriage(vector<vector<int>> mPref, vector<vector<int>> wPref, int N){
     int wPartner[N];
+    int mPartner[N];
 
     bool mFree[N];
 
     memset(wPartner, -1, sizeof(wPartner));
+    memset(mPartner, -1, sizeof(mPartner));
+
     memset(mFree, false, sizeof(mFree));
     int freeCount = N;
     while(freeCount > 0){
@@ -59,13 +56,14 @@ void stableMarriage(int **mPref, int **wPref){
 
             if(wPartner[w] == -1){
                 wPartner[w] = m;
+                mPartner[m] = w;
                 mFree[m] = true;
                 freeCount--;
             }else{
                 int m1 = wPartner[w];
-
-                if(!preference(wPref[w], m, m1)){
+                if(!preference(wPref[w], m, m1, N)){
                     wPartner[w] = m;
+                    mPartner[m] = w;
                     mFree[m] = true;
                     mFree[m1] = false;
                 }
@@ -73,25 +71,18 @@ void stableMarriage(int **mPref, int **wPref){
         }
     }
     for(int i = 0; i < N; i++)
-        cout << mPref[i] << " ";
-    cout << endl;
-    for(int i = 0; i < N; i++)
-        cout << wPref[i] << " ";
-    cout << endl;
-
+        cout << i+1 << " " << mPartner[i]+1 << endl;
 }
-
-
 
 int main(){
     int nTestCase = 0;
+    int N;
     cin >> nTestCase;
     for(int i = 0; i < nTestCase; i++){
         cin >> N;
-        cout << N << endl;
-        int **mPref = readPreferences();
-        int **wPref = readPreferences();
-        stableMarriage(mPref, wPref);       
+        vector<vector<int>> mPref = readPreferences(N);
+        vector<vector<int>> wPref = readPreferences(N);
+        stableMarriage(mPref, wPref, N);       
     }
 
 

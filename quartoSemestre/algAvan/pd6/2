@@ -1,0 +1,28 @@
+//edist
+//smallest n of op to transform string a to b
+//
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int edist(string A, string B, int i1, int i2){
+    if(A[i1] == B[i2]){
+        i1++; i2++;
+
+    }
+        
+}
+
+int main(){
+    int nTestCases;
+    cin >> nTestCases;
+    for(int i = 0; i < nTestCases; i++){
+        string A, B; 
+        cin >> A;
+        cin >> B;
+        cout << edist(A, B);
+    }
+    return 0;
+}
