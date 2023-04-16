@@ -49,14 +49,14 @@ class Ideal(Filter):
         else:
             return 1
 
-
-    
+  
 class Laplacian(Filter):
     k = (-4 * pi_2)
 
     def function(a, b):
         result = self.k * (self.diff_power(a, self.P/2) + self.diff_power(b, self.Q/2))
         return result
+
 
 class Gaussian(Filter):
     omega_r2: float = 1.0
@@ -72,18 +72,20 @@ class Gaussian(Filter):
         x = first+second
         return np.exp(-x)
 
+
 class Butterworth(Filter):
     D0: float = 1.0
-    n: float = 1.0
+    D1: float = 1.0
+    n0: float = 1.0
+    D1: float = 1.0
 
     def set_var(D0, n):
         self.D0 = D0
         self.n = n
 
     def function(a, b):
-        den = (1 + np.power((self.diff_sum_sqrt(a, b)/self.D0), 2 * self.n))
+        den = (1 + np.power((self.diff_sum_sqrt(a, b)/self.D0), 2 * self.n0))
         return 1/den
-
 
 
 def main():
