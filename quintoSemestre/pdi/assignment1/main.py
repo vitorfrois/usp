@@ -17,7 +17,8 @@ ones = np.ones((30, 30))
 
 
 def gamma_correction(image: np.array, gamma: float):
-    new_image = np.floor(255 * np.power(image / 255, 1 / gamma))
+    print('corrigindo gamma')
+    new_image = np.ceil(255 * np.power(image / 255.0, 1.0 / gamma))
     return new_image
 
 
@@ -65,6 +66,7 @@ def apply_equalization(image: np.array, no_levels, transfer_function: np.array):
 def show_image(image: np.array):
     N, _ = image.shape
     plt.imshow(image, cmap="gray", vmin=0, vmax=N)
+    plt.show()
 
 
 def super_resolution(image_list):
@@ -73,8 +75,8 @@ def super_resolution(image_list):
     for x in range(0, image_N, 1):
         for y in range(0, image_M, 1):
             hd_image[2*x, 2*y] = image_list[0][x, y]
-            hd_image[2*x + 1, 2*y] = image_list[1][x, y]
-            hd_image[2*x, 2*y + 1] = image_list[2][x, y]
+            hd_image[2*x, 2*y + 1] = image_list[1][x, y]
+            hd_image[2*x + 1, 2*y] = image_list[2][x, y]
             hd_image[2*x + 1, 2*y + 1] = image_list[3][x, y]
     return hd_image
 
@@ -99,10 +101,10 @@ def process_images(image_list, enhancement_method, gamma):
             image_list[i] = apply_equalization(image_list[i], NUMBER_LEVELS, transfer_function)
     elif enhancement_method == JOINT_HIST:
         sum_N, sum_M = image_list[0].shape
-        sum_image = np.zeros((sum_N, sum_M))
+        final_transfer_function = np.zeros((sum_N, sum_M))
         for i in range(NUMBER_IMAGES):
-            sum_image += image_list[i]
-        transfer_function = histogram_equalization_function(sum_image, NUMBER_LEVELS)
+            transfer_function = histogram_equalization_function(image_list[i], NUMBER_LEVELS)
+            final_transfer_function += transfer_function
         for i in range(NUMBER_IMAGES):
             image_list[i] = apply_equalization(image_list[i], NUMBER_LEVELS, transfer_function)
     elif enhancement_method == GAMMA_CORRECTION:
@@ -119,8 +121,8 @@ if __name__ == '__main__':
         lines = input_file.read().split('\n')
         low_res_image_name = lines[0]
         hd_image_name = lines[1]
-        enhancement_method = lines[2]
-        gamma = lines[3]
+        enhancement_method = int(lines[2])
+        gamma = float(lines[3])
 
     image_list = []
     for i in range(NUMBER_IMAGES):
