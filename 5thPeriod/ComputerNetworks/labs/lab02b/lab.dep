@@ -1,0 +1,4 @@
+host1: sw1
+host3: host1
+host2: host1
+host4: host1

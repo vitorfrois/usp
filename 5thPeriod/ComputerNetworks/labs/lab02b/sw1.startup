@@ -1,0 +1,2 @@
+chmod 770 /root/switch-me.sh
+/root/switch-me.sh

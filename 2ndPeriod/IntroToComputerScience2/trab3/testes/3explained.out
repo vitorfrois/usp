@@ -1,0 +1,64 @@
+Time = 1 - - - - - - - - - -
+Inserting Process 101, priority=4, tf=4
+Inserting Process 4707, priority=3, tf=5
+Inserting Process 407, priority=1, tf=2
+Current order after insertions:
+101 (tf=4, p=4) -> 4707 (tf=5, p=3) -> 407 (tf=2, p=1) -> 
+
+Time = 2 - - - - - - - - - -
+Current order after insertions:
+4707 (tf=5, p=3) -> 407 (tf=2, p=1) -> 101 (tf=3, p=4) -> 
+
+Time = 3 - - - - - - - - - -
+Current order after insertions:
+407 (tf=2, p=1) -> 101 (tf=3, p=4) -> 4707 (tf=4, p=3) -> 
+
+Time = 4 - - - - - - - - - -
+Inserting Process 883, priority=2, tf=3
+Current order after insertions:
+101 (tf=3, p=4) -> 4707 (tf=4, p=3) -> 883 (tf=3, p=2) -> 407 (tf=1, p=1) -> 
+
+Time = 5 - - - - - - - - - -
+Current order after insertions:
+4707 (tf=4, p=3) -> 883 (tf=3, p=2) -> 407 (tf=1, p=1) -> 101 (tf=2, p=4) -> 
+
+Time = 6 - - - - - - - - - -
+Current order after insertions:
+883 (tf=3, p=2) -> 407 (tf=1, p=1) -> 101 (tf=2, p=4) -> 4707 (tf=3, p=3) -> 
+
+Time = 7 - - - - - - - - - -
+Current order after insertions:
+407 (tf=1, p=1) -> 101 (tf=2, p=4) -> 4707 (tf=3, p=3) -> 883 (tf=2, p=2) -> 
+Process 407 Done in t=7, run.codes output: 407 7
+
+Time = 8 - - - - - - - - - -
+Current order after insertions:
+101 (tf=2, p=4) -> 4707 (tf=3, p=3) -> 883 (tf=2, p=2) -> 
+
+Time = 9 - - - - - - - - - -
+Current order after insertions:
+4707 (tf=3, p=3) -> 883 (tf=2, p=2) -> 
+
+Time = 10 - - - - - - - - - -
+Current order after insertions:
+883 (tf=2, p=2) -> 
+
+Time = 11 - - - - - - - - - -
+Current order after insertions:
+101 (tf=1, p=4) -> 4707 (tf=2, p=3) -> 883 (tf=1, p=2) -> 
+Process 101 Done in t=11, run.codes output: 101 11
+
+Time = 12 - - - - - - - - - -
+Current order after insertions:
+4707 (tf=2, p=3) -> 883 (tf=1, p=2) -> 
+
+Time = 13 - - - - - - - - - -
+Current order after insertions:
+883 (tf=1, p=2) -> 
+Process 883 Done in t=13, run.codes output: 883 13
+
+Time = 14 - - - - - - - - - -
+Current order after insertions:
+4707 (tf=1, p=3) -> 
+Process 4707 Done in t=14, run.codes output: 4707 14
+

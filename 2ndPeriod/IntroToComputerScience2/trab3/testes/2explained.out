@@ -1,0 +1,56 @@
+Time = 1 - - - - - - - - - -
+Inserting Process 47, priority=4, tf=3
+Inserting Process 56, priority=3, tf=3
+Inserting Process 55, priority=2, tf=3
+Inserting Process 21, priority=1, tf=3
+Current order after insertions:
+47 (tf=3, p=4) -> 56 (tf=3, p=3) -> 55 (tf=3, p=2) -> 21 (tf=3, p=1) -> 
+
+Time = 2 - - - - - - - - - -
+Current order after insertions:
+56 (tf=3, p=3) -> 55 (tf=3, p=2) -> 21 (tf=3, p=1) -> 47 (tf=2, p=4) -> 
+
+Time = 3 - - - - - - - - - -
+Current order after insertions:
+55 (tf=3, p=2) -> 21 (tf=3, p=1) -> 47 (tf=2, p=4) -> 56 (tf=2, p=3) -> 
+
+Time = 4 - - - - - - - - - -
+Current order after insertions:
+21 (tf=3, p=1) -> 47 (tf=2, p=4) -> 56 (tf=2, p=3) -> 55 (tf=2, p=2) -> 
+
+Time = 5 - - - - - - - - - -
+Current order after insertions:
+47 (tf=2, p=4) -> 56 (tf=2, p=3) -> 55 (tf=2, p=2) -> 21 (tf=2, p=1) -> 
+
+Time = 6 - - - - - - - - - -
+Current order after insertions:
+56 (tf=2, p=3) -> 55 (tf=2, p=2) -> 21 (tf=2, p=1) -> 47 (tf=1, p=4) -> 
+
+Time = 7 - - - - - - - - - -
+Current order after insertions:
+55 (tf=2, p=2) -> 21 (tf=2, p=1) -> 47 (tf=1, p=4) -> 56 (tf=1, p=3) -> 
+
+Time = 8 - - - - - - - - - -
+Current order after insertions:
+21 (tf=2, p=1) -> 47 (tf=1, p=4) -> 56 (tf=1, p=3) -> 55 (tf=1, p=2) -> 
+
+Time = 9 - - - - - - - - - -
+Current order after insertions:
+47 (tf=1, p=4) -> 56 (tf=1, p=3) -> 55 (tf=1, p=2) -> 21 (tf=1, p=1) -> 
+Process 47 Done in t=9, run.codes output: 47 9
+
+Time = 10 - - - - - - - - - -
+Current order after insertions:
+56 (tf=1, p=3) -> 55 (tf=1, p=2) -> 21 (tf=1, p=1) -> 
+Process 56 Done in t=10, run.codes output: 56 10
+
+Time = 11 - - - - - - - - - -
+Current order after insertions:
+55 (tf=1, p=2) -> 21 (tf=1, p=1) -> 
+Process 55 Done in t=11, run.codes output: 55 11
+
+Time = 12 - - - - - - - - - -
+Current order after insertions:
+21 (tf=1, p=1) -> 
+Process 21 Done in t=12, run.codes output: 21 12
+

@@ -1,0 +1,60 @@
+Time = 1 - - - - - - - - - -
+Inserting Process 478, priority=3, tf=3
+Inserting Process 12, priority=2, tf=3
+Inserting Process 1759, priority=1, tf=3
+Current order after insertions:
+478 (tf=3, p=3) -> 12 (tf=3, p=2) -> 1759 (tf=3, p=1) -> 
+
+Time = 2 - - - - - - - - - -
+Inserting Process 126, priority=4, tf=3
+Current order after insertions:
+12 (tf=3, p=2) -> 1759 (tf=3, p=1) -> 126 (tf=3, p=4) -> 478 (tf=2, p=3) -> 
+A new process has higher (4) priority than the process that would run next (12, p=2)
+Changing next process to be 126, the first with priority=4
+This changes the order to be:
+126 (tf=3, p=4) -> 478 (tf=2, p=3) -> 12 (tf=3, p=2) -> 1759 (tf=3, p=1) -> 
+
+Time = 3 - - - - - - - - - -
+Current order after insertions:
+478 (tf=2, p=3) -> 12 (tf=3, p=2) -> 1759 (tf=3, p=1) -> 126 (tf=2, p=4) -> 
+
+Time = 4 - - - - - - - - - -
+Current order after insertions:
+12 (tf=3, p=2) -> 1759 (tf=3, p=1) -> 126 (tf=2, p=4) -> 478 (tf=1, p=3) -> 
+
+Time = 5 - - - - - - - - - -
+Current order after insertions:
+1759 (tf=3, p=1) -> 126 (tf=2, p=4) -> 478 (tf=1, p=3) -> 12 (tf=2, p=2) -> 
+
+Time = 6 - - - - - - - - - -
+Current order after insertions:
+126 (tf=2, p=4) -> 478 (tf=1, p=3) -> 12 (tf=2, p=2) -> 1759 (tf=2, p=1) -> 
+
+Time = 7 - - - - - - - - - -
+Current order after insertions:
+478 (tf=1, p=3) -> 12 (tf=2, p=2) -> 1759 (tf=2, p=1) -> 126 (tf=1, p=4) -> 
+Process 478 Done in t=7, run.codes output: 478 7
+
+Time = 8 - - - - - - - - - -
+Current order after insertions:
+12 (tf=2, p=2) -> 1759 (tf=2, p=1) -> 126 (tf=1, p=4) -> 
+
+Time = 9 - - - - - - - - - -
+Current order after insertions:
+1759 (tf=2, p=1) -> 126 (tf=1, p=4) -> 
+
+Time = 10 - - - - - - - - - -
+Current order after insertions:
+126 (tf=1, p=4) -> 
+Process 126 Done in t=10, run.codes output: 126 10
+
+Time = 11 - - - - - - - - - -
+Current order after insertions:
+12 (tf=1, p=2) -> 1759 (tf=1, p=1) -> 
+Process 12 Done in t=11, run.codes output: 12 11
+
+Time = 12 - - - - - - - - - -
+Current order after insertions:
+1759 (tf=1, p=1) -> 
+Process 1759 Done in t=12, run.codes output: 1759 12
+

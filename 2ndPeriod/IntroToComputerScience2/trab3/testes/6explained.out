@@ -1,0 +1,76 @@
+Time = 1 - - - - - - - - - -
+Inserting Process 2713, priority=1, tf=4
+Inserting Process 5269, priority=2, tf=5
+Inserting Process 203, priority=1, tf=3
+Inserting Process 1141, priority=2, tf=4
+Current order after insertions:
+2713 (tf=4, p=1) -> 1141 (tf=4, p=2) -> 5269 (tf=5, p=2) -> 203 (tf=3, p=1) -> 
+A new process has higher (2) priority than the process that would run next (2713, p=1)
+Changing next process to be 1141, the first with priority=2
+This changes the order to be:
+1141 (tf=4, p=2) -> 5269 (tf=5, p=2) -> 203 (tf=3, p=1) -> 2713 (tf=4, p=1) -> 
+
+Time = 2 - - - - - - - - - -
+Current order after insertions:
+5269 (tf=5, p=2) -> 203 (tf=3, p=1) -> 2713 (tf=4, p=1) -> 1141 (tf=3, p=2) -> 
+
+Time = 3 - - - - - - - - - -
+Current order after insertions:
+203 (tf=3, p=1) -> 2713 (tf=4, p=1) -> 1141 (tf=3, p=2) -> 5269 (tf=4, p=2) -> 
+
+Time = 4 - - - - - - - - - -
+Current order after insertions:
+2713 (tf=4, p=1) -> 1141 (tf=3, p=2) -> 5269 (tf=4, p=2) -> 203 (tf=2, p=1) -> 
+
+Time = 5 - - - - - - - - - -
+Current order after insertions:
+1141 (tf=3, p=2) -> 5269 (tf=4, p=2) -> 203 (tf=2, p=1) -> 2713 (tf=3, p=1) -> 
+
+Time = 6 - - - - - - - - - -
+Current order after insertions:
+5269 (tf=4, p=2) -> 203 (tf=2, p=1) -> 2713 (tf=3, p=1) -> 1141 (tf=2, p=2) -> 
+
+Time = 7 - - - - - - - - - -
+Current order after insertions:
+203 (tf=2, p=1) -> 2713 (tf=3, p=1) -> 1141 (tf=2, p=2) -> 5269 (tf=3, p=2) -> 
+
+Time = 8 - - - - - - - - - -
+Current order after insertions:
+2713 (tf=3, p=1) -> 1141 (tf=2, p=2) -> 5269 (tf=3, p=2) -> 203 (tf=1, p=1) -> 
+
+Time = 9 - - - - - - - - - -
+Current order after insertions:
+1141 (tf=2, p=2) -> 5269 (tf=3, p=2) -> 203 (tf=1, p=1) -> 2713 (tf=2, p=1) -> 
+
+Time = 10 - - - - - - - - - -
+Current order after insertions:
+5269 (tf=3, p=2) -> 203 (tf=1, p=1) -> 2713 (tf=2, p=1) -> 1141 (tf=1, p=2) -> 
+
+Time = 11 - - - - - - - - - -
+Current order after insertions:
+203 (tf=1, p=1) -> 2713 (tf=2, p=1) -> 1141 (tf=1, p=2) -> 5269 (tf=2, p=2) -> 
+Process 203 Done in t=11, run.codes output: 203 11
+
+Time = 12 - - - - - - - - - -
+Current order after insertions:
+2713 (tf=2, p=1) -> 1141 (tf=1, p=2) -> 5269 (tf=2, p=2) -> 
+
+Time = 13 - - - - - - - - - -
+Current order after insertions:
+1141 (tf=1, p=2) -> 5269 (tf=2, p=2) -> 
+Process 1141 Done in t=13, run.codes output: 1141 13
+
+Time = 14 - - - - - - - - - -
+Current order after insertions:
+5269 (tf=2, p=2) -> 
+
+Time = 15 - - - - - - - - - -
+Current order after insertions:
+2713 (tf=1, p=1) -> 
+Process 2713 Done in t=15, run.codes output: 2713 15
+
+Time = 16 - - - - - - - - - -
+Current order after insertions:
+5269 (tf=1, p=2) -> 
+Process 5269 Done in t=16, run.codes output: 5269 16
+

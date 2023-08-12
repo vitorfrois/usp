@@ -1,0 +1,104 @@
+%%%%%% Configurando os pacotes e comandos %%%%%%
+%%%%%% Pule para a linha 62 %%%%%%%
+\documentclass[fontsize=11pt]{article}
+\usepackage[margin=0.70in]{geometry}
+\usepackage{lipsum,mwe,abstract}
+\usepackage[T1]{fontenc} 
+\usepackage[brazilian]{babel} 
+\usepackage{setspace}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+\usepackage{multirow}
+
+\usepackage{fancyhdr} % Custom headers and footers
+%\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+%\fancyhead{} 
+%\fancyfoot[C]{\thepage} % Page numbering for right footer
+\setlength\parindent{0pt} 
+\setstretch{1.5}
+
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{comment}
+\usepackage{enumitem}
+\usepackage{cuted}
+\usepackage{sectsty} % Allows customizing section commands
+% \allsectionsfont{\normalfont \large \scshape} % Section names in small caps and normal fonts
+
+\renewenvironment{abstract} % Change how the abstract look to remove margins
+ {\small
+  \begin{center}
+  \bfseries \abstractname\vspace{-.5em}\vspace{0pt}
+  \end{center}
+  \list{}{%
+    \setlength{\leftmargin}{0mm}
+    \setlength{\rightmargin}{\leftmargin}%
+  }
+  \item\relax}
+ {\endlist}
+ 
+\makeatletter
+\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}% Change how the title looks like
+\begin{center}
+    \textbf{
+      Universidade de São Paulo\\
+      Instituto de Ciências Matemáticas e Computação
+    }
+\end{center}
+\begin{flushleft}
+  \textbf{\@title}
+  \@author\\
+  [3pt] 
+  \@date
+\end{flushleft}\egroup
+}
+\makeatother
+%%% Daqui pra cima é apenas configuração %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% Definindo seus dados %%%%%%
+\title{
+\Large{Relatório 3 de Laboratório de Introdução à Ciências da Computação 2}\\
+[10pt] 
+}
+\author{Vítor Amorim Fróis} 
+\date{\today}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%% Iniciando seu relatório %%%%%% 
+\begin{document}
+\maketitle
+ 
+\begin{abstract}
+    
+
+    %%%%%% Contextualize o seu trabalho. %%%%%%%
+\end{abstract}
+
+\rule{\linewidth}{0.2pt}
+
+\section{Introdução}
+    %%%%%% Faça a introdução do seu relatório. O que será feito? %%%%%%
+    Durante o 3º módulo de LICC2, foram estudados métodos que alcançam tempo de
+    ordenação linear. São eles o Counting, Bucket e Radix Sort.
+
+\section{Metodologia e desenvolvimento}
+    %%%%%% Explique a metodologia utilizada e o desenvolvimento do projeto. Como você obteve seus dados? Coloque seus códigos e embasamentos teóricos aqui se necessário. %%%%%%
+
+\section{Resultados}
+    %%%%%% Mostre os resultados obtidos através dos cálculos. Utilize imagens se necessário. %%%%%%
+    
+\section{Conclusão}
+    %%%%%% Conclusão do relatório. O que você aprendeu nessa tarefa? %%%%%%
+
+
+\bibliographystyle{plain}
+\bibliography{references.bib}
+    %%%%%% Lembre-se de adicionar as referências bibliográficas utilizadas no arquivo 'references.bib'e depois cita-las nessa seção. Conulta: https://pt.overleaf.com/learn/latex/Bibliography_management_in_LaTeX %%%%%%
+
+\end{document}
+
+ 

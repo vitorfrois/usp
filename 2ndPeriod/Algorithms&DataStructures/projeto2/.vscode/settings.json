@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "treap.h": "c",
+        "*.tcc": "c",
+        "deque": "c",
+        "list": "c",
+        "string": "c",
+        "unordered_map": "c",
+        "unordered_set": "c",
+        "vector": "c",
+        "ostream": "c",
+        "random": "c",
+        "list.h": "c",
+        "string.h": "c",
+        "queue.h": "c",
+        "mystring.h": "c",
+        "stdarg.h": "c",
+        "stdlib.h": "c",
+        "assert.h": "c"
+    }
+}
