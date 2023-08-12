@@ -37,6 +37,7 @@ Uma função $P$ é denominada uma medida de probabilidade se satisfaz
 $P(A \cup B)=P(A)+P(B)-P(A \cap B)$
 
 **Prova**
+
 $$
 A \cup B = (\bar A \cap B)\cup(A \cap \bar B)U(A\cap B)
 \\ \text{Como os eventos são mutuamente exclusivos, podemos escrever}
@@ -45,6 +46,7 @@ A \cup B = (\bar A \cap B)\cup(A \cap \bar B)U(A\cap B)
 \\ P(A \cup B) = [P(A) - P(A \cap B)] + [P(B) - P(A \cap B)] + P(A\cap B)
 \\ \text{Finalmente: } P(A \cup B) = P(A) + P(B) - P(A \cap B)
 $$
+
 **Probabilidade condicional**
 
 Lê se como a probabilidade de A ocorrer dado que B ocorreu
