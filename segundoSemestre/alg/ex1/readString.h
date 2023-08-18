@@ -1,1 +1,0 @@
-char* readString(int* isNum);

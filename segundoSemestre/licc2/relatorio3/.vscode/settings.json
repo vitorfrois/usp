@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "chrono": "c",
-        "random": "c",
-        "limits": "c",
-        "semaphore": "c",
-        "valarray": "c"
-    }
-}
