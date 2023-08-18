@@ -1,4 +1,0 @@
-# This file is used internally by FFMPEG.
-file 'file:/home/vitor/Documents/usp/terceiroSemestre/grafos/primeiroEx/erdosrenyi/media/videos/main/720p30/partial_movie_files/DefaultTemplate/201570087_3451491419_223132457.mp4'
-file 'file:/home/vitor/Documents/usp/terceiroSemestre/grafos/primeiroEx/erdosrenyi/media/videos/main/720p30/partial_movie_files/DefaultTemplate/242618770_1283127080_2319886907.mp4'
-file 'file:/home/vitor/Documents/usp/terceiroSemestre/grafos/primeiroEx/erdosrenyi/media/videos/main/720p30/partial_movie_files/DefaultTemplate/242618770_1853876462_2319886907.mp4'
