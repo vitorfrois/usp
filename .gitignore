@@ -3,3 +3,8 @@
 *.png
 *.jpeg
 *.dll
+/media
+*.zip
+*.pyc
+.idea
+__pycache__
