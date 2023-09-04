@@ -1,4 +1,4 @@
-﻿# Introdução
+# Introdução
 ## Aprendizado de Máquina
 > "**Machine Learning**: the field of study that giver computer the ability to learn without being explicitly programmed"
 
@@ -8,9 +8,9 @@ Pode ser exemplificado como uma função $g$ que aproxima $f: X \rightarrow Y$ p
 Uma **série temporal** é um conjunto de valores ordenados x tal que 
 
 - $x = (x_1,x_2,...,x_n)$
-- $x_i \in \R ,\forall i \in {1,2,...,n}$
+- $x_i \in \mathbb{R} ,\forall i \in {1,2,...,n}$
 
-Séries temporais podem ser multivariadas ou multidimensionais quando $x_i \in \R ^d$
+Séries temporais podem ser multivariadas ou multidimensionais quando $x_i \in \mathbb{R} ^d$
 
 ### Estacionaridade
 Descreve como os dados se comportam ao longo do tempo. O teste mais comum para verificação é o de Dickey-Fuller.
