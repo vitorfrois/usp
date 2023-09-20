@@ -1,4 +1,4 @@
-﻿# Teorema de Bayes
+# Teorema de Bayes
 > "Probabilidade é uma opinião metódica e inferência de dados nada mais é do que a revisão de tal opinião com novas informações relevantes."
 
 ### Partição do espaço amostral
@@ -31,12 +31,13 @@ Essa propriedade é muito útil pois permite reescrever probabilidades de um jei
 Vamos demonstrar o teorema
 $P(B_i | A) = \dfrac{P(A \cap B_i)}{P(A)}$
 
-$P(B_i | A) = \dfrac
+$$P(B_i | A) = \dfrac
 	{P(A | B_i)P(B_i)}
-	{\sum^n_{j=1} P(A | B_j)P(B_j)}$
+	{\sum^n_{j=1} P(A | B_j)P(B_j)}$$
 
 Os termos dessa equação são nomeados como
 
-$\text{probabilidade a posteriori} = \dfrac
-	{\text{verossimilhança}\times \text{priori}}
-	{\text{evidência}}$
+$$\text{probabilidade a posteriori} = \dfrac
+	{\text{verossimilhanca}\times \text{priori}}
+	{\text{evidência}}
+	$$
