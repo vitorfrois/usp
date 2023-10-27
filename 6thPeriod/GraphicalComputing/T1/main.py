@@ -33,75 +33,16 @@ mat_identidade = np.array([  1.0, 0.0, 0.0, 0.0,
                                   0.0, 0.0, 1.0, 0.0, 
                                   0.0, 0.0, 0.0, 1.0], np.float32)
 
-def load_model_from_file(filename):
-    """Loads a Wavefront OBJ file. """
-    objects = {}
-    vertices = []
-    texture_coords = []
-    faces = []
-
-    material = None
-
-    # abre o arquivo obj para leitura
-    for line in open(filename, "r"): ## para cada linha do arquivo .obj
-        if line.startswith('#'): continue ## ignora comentarios
-        values = line.split() # quebra a linha por espaço
-        if not values: continue
-
-
-        ### recuperando vertices
-        if values[0] == 'v':
-            vertices.append(values[1:4])
-
-
-        ### recuperando coordenadas de textura
-        elif values[0] == 'vt':
-            texture_coords.append(values[1:3])
-
-        ### recuperando faces 
-        elif values[0] in ('usemtl', 'usemat'):
-            material = values[1]
-        elif values[0] == 'f':
-            face = []
-            face_texture = []
-            for v in values[1:]:
-                w = v.split('/')
-                face.append(int(w[0]))
-                if len(w) >= 2 and len(w[1]) > 0:
-                    face_texture.append(int(w[1]))
-                else:
-                    face_texture.append(0)
-
-            faces.append((face, face_texture, material))
-
-    model = {}
-    model['vertices'] = vertices
-    model['texture'] = texture_coords
-    model['faces'] = faces
-
-    return model
 
 glEnable(GL_TEXTURE_2D)
 qtd_texturas = 10
 textures = glGenTextures(qtd_texturas)
 
-def load_texture_from_file(texture_id, img_textura):
-    glBindTexture(GL_TEXTURE_2D, texture_id)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-    img = Image.open(img_textura)
-    img_width = img.size[0]
-    img_height = img.size[1]
-    image_data = img.tobytes("raw", "RGB", 0, -1)
-    #image_data = np.array(list(img.getdata()), np.uint8)
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
 
 vertices_list = []    
 textures_coord_list = []
 
-modelo = load_model_from_file('resources/basset.obj')
+modelo = load_model_from_obj_file('resources/basset.obj')
 
 ### inserindo vertices do modelo no vetor de vertices
 print('Processando modelo cube.obj. Vertice inicial:',len(vertices_list))
@@ -123,6 +64,7 @@ load_texture_from_file(0,'resources/basset.jpg')
 
 class Object:
     name: str
+    start_vertice: int
     n_vertices: int
     vertices: np.array
     texture: np.array
@@ -133,17 +75,80 @@ class Object:
         self.vertices = list_vertices
         self.texture = list_texture
 
+    @staticmethod
+    def load_model_from_obj_file(filename: str):
+        """Loads a Wavefront OBJ file. """
+        objects = {}
+        vertices = []
+        texture_coords = []
+        faces = []
+
+        material = None
+
+        # abre o arquivo obj para leitura
+        for line in open(filename, "r"): ## para cada linha do arquivo .obj
+            if line.startswith('#'): continue ## ignora comentarios
+            values = line.split() # quebra a linha por espaço
+            if not values: continue
+
+            ### recuperando vertices
+            if values[0] == 'v':
+                vertices.append(values[1:4])
+
+            ### recuperando coordenadas de textura
+            elif values[0] == 'vt':
+                texture_coords.append(values[1:3])
+
+            ### recuperando faces 
+            elif values[0] in ('usemtl', 'usemat'):
+                material = values[1]
+            elif values[0] == 'f':
+                face = []
+                face_texture = []
+                for v in values[1:]:
+                    w = v.split('/')
+                    face.append(int(w[0]))
+                    if len(w) >= 2 and len(w[1]) > 0:
+                        face_texture.append(int(w[1]))
+                    else:
+                        face_texture.append(0)
+
+                faces.append((face, face_texture, material))
+
+        model = {}
+        model['vertices'] = vertices
+        model['texture'] = texture_coords
+        model['faces'] = faces
+
+        
+        print('Processando modelo cube.obj. Vertice inicial:',len(vertices_list))
+        for face in modelo['faces']:
+            for vertice_id in face[0]:
+                vertices_list.append( modelo['vertices'][vertice_id-1] )
+            for texture_id in face[1]:
+                textures_coord_list.append( modelo['texture'][texture_id-1] )
+        print('Processando modelo cube.obj. Vertice final:',len(vertices_list))
+
+        return model
+
+    @staticmethod
+    def load_texture_from_file(texture_id, img_textura):
+        glBindTexture(GL_TEXTURE_2D, texture_id)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        img = Image.open(img_textura)
+        img_width = img.size[0]
+        img_height = img.size[1]
+        image_data = img.tobytes("raw", "RGB", 0, -1)
+        #image_data = np.array(list(img.getdata()), np.uint8)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
+
+    def load_vertices():
+
     def __str__(self):
         return f'Object: {self.name}'
-
-
-
-class ObjectListItem:
-    name: str
-    start: int
-    n_vertices: int
-    obj: Object
-
 
 
 
@@ -154,7 +159,7 @@ class Environment:
     buffer: None
     total_vertices: int
     n_objects: int
-    obj_list: list[ObjectListItem]
+    obj_list: dict[str, Object]
     list_vertices: list
     list_texture: list
 
@@ -244,32 +249,48 @@ class Environment:
         glfw.show_window(self.window)
 
     def add_object(self, obj: Object):
-        obj_item = ObjectListItem()
-        obj_item.start = self.total_vertices
-        obj_item.n_vertices = obj.n_vertices
-        obj_item.name = obj.name
-        obj_item.obj = obj
-
+        try:
+            self.obj_list[obj.name] = obj
+        except KeyError:
+            logger.error(f'There is already an object named {obj.name}')
+            return 
+            
         for i in obj.vertices:
             self.list_vertices.append(i) 
 
         if obj.texture is not None:
             for i in obj.texture:
                 self.list_texture.append(i)
-
-        self.obj_list.append(obj_item)
+        
         self.total_vertices += obj.n_vertices
         self.n_objects += 1
 
-    def send_vertices(self):
-        list_vertices = self.get_vertices()
+    def send_object_vertices(self, obj: Object):
+        list_vertices = obj.vertices
 
-        vertices = np.zeros(self.total_vertices, [("position", np.float32, 3)])
+        vertices = np.zeros(obj.n_vertices, [("position", np.float32, 3)])
         vertices['position'] = list_vertices
         stride = vertices.strides[0]
-        glVertexAttribPointer(self.loc, 3, GL_FLOAT, False, stride, offset)
+        loc = glGetAttribLocation(self.program, obj.name)
+
+        glVertexAttribPointer(loc, 3, GL_FLOAT, False, stride, offset)
         glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_DYNAMIC_DRAW)
         glBindBuffer(GL_ARRAY_BUFFER, self.buffer[0])
+
+    def send_texture(self):
+        list_texture = self.get_texture()
+
+        texture = np.zeros(len(list_texture), [("position", np.float32, 2)])
+        texture['position'] = list_texture
+
+        glBindBuffer(GL_ARRAY_BUFFER, self.buffer[1])
+        glBufferData(GL_ARRAY_BUFFER, texture.nbytes, texture, GL_STATIC_DRAW)
+        stride = texture.strides[0]    
+
+        loc_texture_coord = glGetAttribLocation(self.program, "texture_coord")
+        glEnableVertexAttribArray(loc_texture_coord)
+        glVertexAttribPointer(loc_texture_coord, 2, GL_FLOAT, False, stride, offset)
+
 
     def send_texture(self):
         list_texture = self.get_texture()
@@ -326,7 +347,7 @@ env.add_object(Object(loc, list_vertices, 'triangle'))
 env.add_object(Object(loc, vertices_list, 'basset', textures_coord_list))
 
 env.send_vertices()
-env.send_texture()
+# env.send_texture()
 
 # translacao
 x_inc = 0.0
