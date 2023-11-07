@@ -97,21 +97,23 @@ class ObjHelper:
 
     @staticmethod
     def load_texture_from_file(texture_id, img_textura):
-        # glActiveTexture(GL_TEXTURE0)
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
+        glGenTextures(1, texture_id)
         glBindTexture(GL_TEXTURE_2D, texture_id)
+        
         img = Image.open(img_textura)
         img_width = img.size[0]
         img_height = img.size[1]
         image_data = img.tobytes("raw", "RGB", 0, -1)
-        #image_data = np.array(list(img.getdata()), np.uint8)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
         glGenerateMipmap(GL_TEXTURE_2D)
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+
+        glBindTexture(GL_TEXTURE_2D, 0)
+
 
 class Object:
     name: str
@@ -158,8 +160,8 @@ class Object:
         for face in modelo['faces']:
             for vertice_id in face[0]:
                 self.list_vertices.append( modelo['vertices'][vertice_id-1] )
-            for texture_id in face[1]:
-                self.list_texture.append( modelo['texture'][texture_id-1] )
+            for texture_coord in face[1]:
+                self.list_texture.append( modelo['texture'][texture_coord-1] )
 
         self.n_vertices = len(self.list_vertices)
         ### inserindo coordenadas de textura do modelo no vetor de texturas
@@ -201,6 +203,8 @@ class Object:
         return mat_translation
 
     def draw_obj(self):
+        print(self.name)
+        # glActiveTexture(GL_TEXTURE0)
         glBindTexture(GL_TEXTURE_2D, self.number)
         glDrawArrays(GL_TRIANGLES, self.start, self.n_vertices) ## renderizando
 
@@ -396,10 +400,12 @@ env.add_object(box)
 box.draw_obj()
 
 env.show_window()
-center_basset_mat = basset.center_obj()
-glUniformMatrix4fv(env.loc, 1, GL_FALSE, center_basset_mat)
-basset.draw_obj()
-logger.info(f'{basset.start}, {basset.n_vertices}')
+# center_basset_mat = basset.center_obj()
+# glUniformMatrix4fv(env.loc, 1, GL_FALSE, center_basset_mat)
+# basset.draw_obj()
+# logger.info(f'{basset.start}, {basset.n_vertices}')
+
+print(env.get_list_objects())
 
 
 # env.send_vertices()
@@ -480,14 +486,14 @@ while not glfw.window_should_close(env.window):
                                0.0, 0.0, 1.0, 0.0, 
                                0.0, 0.0, 0.0, 1.0], np.float32)
     
-    mat_translation = np.array([  1.0, 0.0, 0.0, 1, 
-                                  0.0, 1.0, 0.0, 1, 
-                                  0.0, 0.0, 1.0, 1, 
+    mat_translation = np.array([  1.0, 0.0, 0.0, t_x, 
+                                  0.0, 1.0, 0.0, t_y, 
+                                  0.0, 0.0, 1.0, 0, 
                                   0.0, 0.0, 0.0, 1.0], np.float32)
 
     mat_transform = multiplica_matriz(mat_translation,x_axis_rotation)
     mat_transform = multiplica_matriz(mat_transform,y_axis_rotation)
-    mat_transform = multiplica_matriz(mat_transform,z_axis_rotation)
+    # mat_transform = multiplica_matriz(mat_transform,z_axis_rotation)
     mat_transform = multiplica_matriz(mat_transform,mat_scale)
 
     list_obj = env.get_list_objects()
@@ -503,15 +509,17 @@ while not glfw.window_should_close(env.window):
 
         # Render current object
         loc = env.get_loc()
-        glUniformMatrix4fv(loc, 1, GL_FALSE, mat_transform)
+        glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
         obj_to_render.draw_obj()
         # glDrawArrays(GL_TRIANGLES, obj_to_render.start, obj_to_render.n_vertices)
 
         # Render other objects
         # for obj in other_objects:
-        #     # loc = glGetUniformLocation(program, "mat")
-        #     glUniformMatrix4fv(env.loc, 1, GL_TRUE, x_axis_rotation)
-        #     glDrawArrays(GL_TRIANGLES, obj.start, obj.n_vertices)
+            # loc = glGetUniformLocation(program, "mat")
+            # glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+            # glDrawArrays(GL_TRIANGLES, obj.start, obj.n_vertices)
+            # obj.draw_obj()
+
 
     except IndexError:
         logger.error(f'There are only {len(list_obj)} objects!')
