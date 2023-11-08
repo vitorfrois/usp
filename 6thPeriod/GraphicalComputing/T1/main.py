@@ -71,13 +71,6 @@ basset.draw_obj()
 
 env.show_window()
 
-
-print(env.get_list_objects())
-
-
-# env.send_vertices()
-# env.send_texture()
-
 # MOVE
 x_inc = 0.0
 y_inc = 0.0
@@ -95,7 +88,6 @@ y_angle = 0.0
 z_angle = 0.0
 
 object_selection = 1
-
 
 while not glfw.window_should_close(env.window):
     glfw.poll_events() 
