@@ -110,7 +110,7 @@ while not glfw.window_should_close(env.window):
     y_angle += yr_inc
 
     y_rotation = Matrix.get_y_rotation(y_angle)
-    z_rotation = Matrix.get_z_rotation(z_angle)
+    z_rotation = Matrix.get_x_rotation(z_angle)
     scale = Matrix.get_scale(s_inc)
     translation = Matrix.get_translation(t_x, t_y)
     
