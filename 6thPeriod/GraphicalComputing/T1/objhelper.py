@@ -61,7 +61,7 @@ class ObjHelper:
 
     @staticmethod
     def load_texture_from_file(img_textura, texture_id):
-        logger.info(f"t_id: {texture_id}")
+        logger.info(f"tid: {texture_id}")
         glBindTexture(GL_TEXTURE_2D, texture_id)
         
         img = Image.open(img_textura)
@@ -76,7 +76,7 @@ class ObjHelper:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
 
-        glBindTexture(GL_TEXTURE_2D, 0)
+        # glBindTexture(GL_TEXTURE_2D, 0)
 
         return texture_id
 

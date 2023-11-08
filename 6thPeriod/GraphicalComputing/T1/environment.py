@@ -10,6 +10,7 @@ from OpenGL.GL import *
 from globject import GLObject
 from objhelper import ObjHelper
 from logger_helper import LoggerHelper
+from matrix import Matrix
 
 logger = LoggerHelper.get_logger(__name__)
 
@@ -149,8 +150,8 @@ class Environment:
         obj.send_obj_vertices(self)
         obj.send_obj_texture(self)
 
-        center_obj_mat = obj.center_obj()
-        glUniformMatrix4fv(self.loc, 1, GL_FALSE, center_obj_mat)
+        # center_obj_mat = obj.center_obj()
+        glUniformMatrix4fv(self.get_loc(), 1, GL_TRUE, Matrix.get_identity())
         obj.draw_obj()
         logger.info(f'{obj.start}, {obj.n_vertices}')
         

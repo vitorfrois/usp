@@ -16,42 +16,58 @@ class Matrix:
         return identity_matrix
 
     @staticmethod
-    def get_x_rotation(angle):
+    def get_x_rotation(center, angle):
         s, c = get_trigonometric(angle)
+
+        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
+        back_matrix = Matrix.get_translation(center['x'], center['y'])
+
         x_rotation_matrix = np.array([  1 , 0.0, 0, 0.0, 
                                     0  , c  , -s, 0.0, 
                                     0, s, c, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
-        return x_rotation_matrix
+        return Matrix.multiply(center_matrix, x_rotation_matrix, back_matrix)
     
     @staticmethod
-    def get_y_rotation(angle):
+    def get_y_rotation(center, angle):
         s, c = get_trigonometric(angle)
+
+        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
+        back_matrix = Matrix.get_translation(center['x'], center['y'])
+
         y_rotation_matrix = np.array([  c  , 0.0, s, 0.0, 
                                     0  , 1  , 0.0, 0.0, 
                                     -s, 0.0, c, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
-        return y_rotation_matrix
+
+        return Matrix.multiply(center_matrix, y_rotation_matrix, back_matrix)
 
     @staticmethod
-    def get_z_rotation(angle):
+    def get_z_rotation(center, angle):
         s, c = get_trigonometric(angle)
+
+        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
+        back_matrix = Matrix.get_translation(center['x'], center['y'])
+        
         z_rotation_matrix = np.array([  c  , -s, 0.0, 0.0, 
                                     s  , c  , 0.0, 0.0, 
                                     0.0, 0.0, 1, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
-        return z_rotation_matrix
+        return Matrix.multiply(center_matrix, z_rotation_matrix, back_matrix)
     
     @staticmethod
-    def get_scale(x_factor, y_factor = None):
+    def get_scale(center, x_factor, y_factor = None):
         if y_factor == None:
             y_factor = x_factor
-    
+
+        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
+        back_matrix = Matrix.get_translation(center['x'], center['y'])
+
         scale_matrix =    np.array([  x_factor  , 0.0 , 0.0, 0.0, 
-                                    0.0  , x_factor  , 0.0, 0.0, 
+                                    0.0  , y_factor  , 0.0, 0.0, 
                                     0.0, 0.0, x_factor, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
-        return scale_matrix
+        return Matrix.multiply(center_matrix, scale_matrix, back_matrix)
     
     @staticmethod
     def get_translation(x_factor, y_factor):

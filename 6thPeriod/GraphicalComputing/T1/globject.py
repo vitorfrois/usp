@@ -24,6 +24,7 @@ class GLObject:
     texture: np.array
     start: int
     number: int
+    center: dict
 
     def __init__(self, name):
         self.name = name
@@ -31,6 +32,11 @@ class GLObject:
         self.vertices = []
         self.list_vertices = []
         self.list_texture = []
+        self.center = {
+            'x': 0,
+            'y': 0,
+            'z': 0
+        } 
 
 
     def __str__(self):
@@ -75,7 +81,6 @@ class GLObject:
             except FileNotFoundError:
                 logger.error(f"Did not found {extension} texture file")
 
-
         self.init_vertices(self.list_vertices)
         self.init_texture(self.list_texture)
         logger.info(f'Texture ID: {self.number}, ')
@@ -100,7 +105,7 @@ class GLObject:
 
         texture_loc = env.get_texture_loc()
         glEnableVertexAttribArray(texture_loc)
-        glVertexAttribPointer(texture_loc, 2, GL_FLOAT, GL_FALSE, stride, offset)
+        glVertexAttribPointer(texture_loc, 2, GL_FLOAT, False, stride, offset)
 
     def center_obj(self) -> np.array:
         x = []
@@ -126,13 +131,31 @@ class GLObject:
 
         mat_translation = Matrix.get_translation(-px, -py)
 
+        self.set_center(0, 0, 0)
+
         return mat_translation
 
     def draw_obj(self):
         # print(self.name)
         # glActiveTexture(GL_TEXTURE0)
+        logger.info(f"texture = {self.number}")
+        logger.info(f"vertices: {self.start}, {self.n_vertices}")
         glBindTexture(GL_TEXTURE_2D, self.number)
         glDrawArrays(GL_TRIANGLES, self.start, self.n_vertices) ## renderizando
-        glBindTexture(GL_TEXTURE_2D, 0)
+        # glBindTexture(GL_TEXTURE_2D, 0)
         # logger.info(f"{self.start}, {self.n_vertices}")
+
+    def set_center(self, x, y, z):
+        self.center = {
+            'x': x,
+            'y': y,
+            'z': z
+        }
         
+    def move_center(self, x, y, z = 0):
+        self.center['x'] += x
+        self.center['y'] += y
+        self.center['z'] += z
+
+    def get_center(self):
+        return self.center

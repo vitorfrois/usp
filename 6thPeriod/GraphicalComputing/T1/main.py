@@ -57,17 +57,25 @@ env = Environment()
 env.set_key_callback(key_event)
 window = env.get_window()
 
-# logger.info(f'{triangle.start}, {triangle.n_vertices}')
 
-basset = GLObject('basset')
-basset.init_obj()
-env.add_object(basset)
-basset.draw_obj()
-
-# box = GLObject('caixa')
-# box.init_obj()
-# env.add_object(box)
+box = GLObject('caixa')
+box.init_obj()
+env.add_object(box)
 # box.draw_obj()
+
+# basset = GLObject('basset')
+# basset.init_obj()
+# env.add_object(basset)
+# basset.draw_obj()
+
+box = GLObject('caixa')
+box.init_obj()
+env.add_object(box)
+
+# basset = GLObject('basset')
+# basset.init_obj()
+# env.add_object(basset)
+# basset.draw_obj()
 
 env.show_window()
 
@@ -89,33 +97,38 @@ z_angle = 0.0
 
 object_selection = 1
 
+for obj in env.get_list_objects():
+    logger.info(obj)
+    logger.info(f"{obj.start}, {obj.n_vertices}")
+
 while not glfw.window_should_close(env.window):
     glfw.poll_events() 
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    
     glClearColor(1.0, 1.0, 1.0, 1.0)
-    
     if polygonal_mode==True:
         glPolygonMode(GL_FRONT_AND_BACK,GL_LINE)
     if polygonal_mode==False:
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
 
     
-    #Draw Triangle
+    # Update increases
+    if x_inc > 0.01: x_inc = 0.01
+    if y_inc > 0.01: y_inc = 0.01
+    if x_inc < -0.01: x_inc = -0.01
+    if y_inc < -0.01: y_inc = -0.01
+    t_x += x_inc * s_inc
+    t_y += y_inc * s_inc
 
-    t_x += x_inc
-    t_y += y_inc    
-    z_angle += zr_inc
+    if yr_inc > 10: yr_inc = 10
+    if zr_inc > 10: zr_inc = 10
+    if yr_inc < -10: yr_inc = -10
+    if zr_inc < -10: zr_inc = -10
     y_angle += yr_inc
+    z_angle += zr_inc
 
-    y_rotation = Matrix.get_y_rotation(y_angle)
-    z_rotation = Matrix.get_x_rotation(z_angle)
-    scale = Matrix.get_scale(s_inc)
-    translation = Matrix.get_translation(t_x, t_y)
-    
-    mat_transform = Matrix.multiply(y_rotation, z_rotation, scale, translation)
 
+
+    # Get All Objects
     list_obj = env.get_list_objects()
     
     try:
@@ -131,16 +144,34 @@ while not glfw.window_should_close(env.window):
             y_inc = 0
             yr_inc = 0
             zr_inc = 0
+            t_x = 0
+            t_y = 0
+            y_angle = 0
+            z_angle = 0
             s_inc = 1
             for obj in list_obj:
-                center_matrix = obj.center_obj()
+                center = obj.get_center()
+                center_matrix = Matrix.get_translation(center['x'], center['y'])
                 glUniformMatrix4fv(loc, 1, GL_TRUE, center_matrix)
                 obj.draw_obj()
+                obj.move_center(0, 0)
 
         else:
             # Render current object
+            env.add_object(obj_to_render)
+            center = obj_to_render.get_center()
+            y_rotation = Matrix.get_y_rotation(center, y_angle)
+            z_rotation = Matrix.get_x_rotation(center, z_angle)
+            scale = Matrix.get_scale(center, s_inc)
+            translation = Matrix.get_translation(t_x, t_y)
+            
+            mat_transform = Matrix.multiply(y_rotation, z_rotation, scale, translation)
+
             glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
             obj_to_render.draw_obj()
+            obj_to_render.move_center(x_inc, y_inc)
+            logger.info(obj_to_render.get_center())
+            logger.info(f"{obj_to_render.start} {obj_to_render.n_vertices}")
 
     except IndexError:
         logger.error(f'There are only {len(list_obj)} objects!')
