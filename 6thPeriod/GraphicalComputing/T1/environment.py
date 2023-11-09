@@ -13,6 +13,8 @@ from logger_helper import LoggerHelper
 from matrix import Matrix
 
 logger = LoggerHelper.get_logger(__name__)
+offset = ctypes.c_void_p(0)
+
 
 vertex_code = """
         attribute vec3 position;
@@ -93,9 +95,9 @@ class Environment:
         # textures = glGenTextures(qtd_texturas)
 
         # Request a buffer slot from GPU
-        self.buffer = glGenBuffers(2)
+        self.buffer = glGenBuffers(10)
+        self.buffer_counter = 0
         # Make this buffer the default one
-        glBindBuffer(GL_ARRAY_BUFFER, self.buffer[0])
 
         self.loc = glGetAttribLocation(self.program, "position")
         glEnableVertexAttribArray(self.loc)
@@ -147,14 +149,44 @@ class Environment:
     def add_object(self, obj: GLObject):
         obj.start = self.total_vertices
 
-        obj.send_obj_vertices(self)
-        obj.send_obj_texture(self)
+        for v in obj.vertices['position']:
+            self.list_vertices.append(v)
+
+
+        for t in obj.texture['position']:
+            self.list_texture.append(t)
+
+        # obj.send_obj_vertices(self)
+        # obj.send_obj_texture(self)
 
         # center_obj_mat = obj.center_obj()
         glUniformMatrix4fv(self.get_loc(), 1, GL_TRUE, Matrix.get_identity())
-        obj.draw_obj()
         logger.info(f'{obj.start}, {obj.n_vertices}')
         
         self.obj_list.append(obj)
         self.total_vertices += obj.n_vertices
         self.n_objects += 1
+
+    def send_vertices(self):
+        vertices = np.zeros(self.total_vertices, [("position", np.float32, 3)])
+        vertices['position'] = self.list_vertices
+
+        glBindBuffer(GL_ARRAY_BUFFER, self.buffer[0])
+        glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_STATIC_DRAW)
+        stride = vertices.strides[0]
+
+        loc = self.get_loc()
+        glEnableVertexAttribArray(loc)
+        glVertexAttribPointer(loc, 3, GL_FLOAT, False, stride, offset)
+
+    def send_texture(self):
+        texture = np.zeros(len(self.list_texture), [("position", np.float32, 2)])
+        texture['position'] = self.list_texture
+
+        glBindBuffer(GL_ARRAY_BUFFER, self.buffer[1])
+        glBufferData(GL_ARRAY_BUFFER, texture.nbytes, texture, GL_STATIC_DRAW)
+        stride = texture.strides[0]    
+
+        texture_loc = self.get_texture_loc()
+        glVertexAttribPointer(texture_loc, 2, GL_FLOAT, False, stride, offset)
+        glEnableVertexAttribArray(texture_loc)

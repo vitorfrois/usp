@@ -4,6 +4,7 @@ import OpenGL.GL.shaders
 import numpy as np
 import logging
 
+from dataclasses import dataclass
 from OpenGL.GL import *
 from matrix import Matrix
 from logger_helper import LoggerHelper
@@ -15,6 +16,14 @@ offset = ctypes.c_void_p(0)
 
 from objhelper import ObjHelper
 
+@dataclass
+class Position:
+    t_x: float
+    t_y: float
+    y_angle: float
+    z_angle: float
+    s_inc: float
+
 class GLObject:
     name: str
     n_vertices: int
@@ -25,6 +34,7 @@ class GLObject:
     start: int
     number: int
     center: dict
+    position: Position
 
     def __init__(self, name):
         self.name = name
@@ -36,7 +46,8 @@ class GLObject:
             'x': 0,
             'y': 0,
             'z': 0
-        } 
+        }
+        self.position = Position(0, 0, 0, 0, 1)
 
 
     def __str__(self):
@@ -71,9 +82,9 @@ class GLObject:
             for texture_coord in face[1]:
                 self.list_texture.append( modelo['texture'][texture_coord-1] )
 
+        self.number = glGenTextures(1)
         self.n_vertices = len(self.list_vertices)
         ### inserindo coordenadas de textura do modelo no vetor de texturas
-        self.number = glGenTextures(1)
         for extension in TEXTURES_EXT:
             try:
                 ObjHelper.load_texture_from_file(f'resources/{self.name}.{extension}', self.number)
@@ -86,13 +97,14 @@ class GLObject:
         logger.info(f'Texture ID: {self.number}, ')
 
     def send_obj_vertices(self, env):
+        logger.info(f'buffer = {env.buffer_counter}')
         glBindBuffer(GL_ARRAY_BUFFER, env.buffer[0])
         glBufferData(GL_ARRAY_BUFFER, self.vertices.nbytes, self.vertices, GL_STATIC_DRAW)
         stride = self.vertices.strides[0]
 
         loc = env.get_loc()
-        glEnableVertexAttribArray(loc)
         glVertexAttribPointer(loc, 3, GL_FLOAT, False, stride, offset)
+        glEnableVertexAttribArray(loc)
 
     def send_obj_texture(self, env):
         if len(self.texture) == 0:
@@ -104,8 +116,8 @@ class GLObject:
         stride = self.texture.strides[0]    
 
         texture_loc = env.get_texture_loc()
-        glEnableVertexAttribArray(texture_loc)
         glVertexAttribPointer(texture_loc, 2, GL_FLOAT, False, stride, offset)
+        glEnableVertexAttribArray(texture_loc)
 
     def center_obj(self) -> np.array:
         x = []
@@ -140,6 +152,7 @@ class GLObject:
         # glActiveTexture(GL_TEXTURE0)
         logger.info(f"texture = {self.number}")
         logger.info(f"vertices: {self.start}, {self.n_vertices}")
+        glEnableVertexAttribArray(0)    
         glBindTexture(GL_TEXTURE_2D, self.number)
         glDrawArrays(GL_TRIANGLES, self.start, self.n_vertices) ## renderizando
         # glBindTexture(GL_TEXTURE_2D, 0)
@@ -159,3 +172,6 @@ class GLObject:
 
     def get_center(self):
         return self.center
+
+    def get_position(self):
+        return self.position

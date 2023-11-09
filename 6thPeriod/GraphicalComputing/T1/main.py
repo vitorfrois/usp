@@ -49,6 +49,13 @@ def key_event(window,key,scancode,action,mods):
     if key == 52: object_selection = 4
     if key == 53: object_selection = 5
 
+    if key >= 49 and key <= 53:
+        x_inc = 0
+        y_inc = 0
+        yr_inc = 0
+        zr_inc = 0
+        s_inc = 1
+
     info_message = f"Pressed key: {key}"
     logging.info(info_message)
 
@@ -58,26 +65,34 @@ env.set_key_callback(key_event)
 window = env.get_window()
 
 
+env.show_window()
+
+loc = env.get_loc()
+
+basset = GLObject('basset')
+basset.init_obj()
+env.add_object(basset)
+
 box = GLObject('caixa')
 box.init_obj()
 env.add_object(box)
 # box.draw_obj()
+# t = Matrix.get_translation(1, 1)
+# glUniformMatrix4fv(loc, 1, GL_FALSE, t)
+# box.draw_obj()
+# box.move_center(1, 1)
+
+
+# t = Matrix.get_translation(-0.1, -0.1)
+# glUniformMatrix4fv(env.get_loc(), 1, GL_TRUE, t)
+# basset.draw_obj()
+# basset.move_center(-0.1, -0.1)
 
 # basset = GLObject('basset')
 # basset.init_obj()
 # env.add_object(basset)
 # basset.draw_obj()
 
-box = GLObject('caixa')
-box.init_obj()
-env.add_object(box)
-
-# basset = GLObject('basset')
-# basset.init_obj()
-# env.add_object(basset)
-# basset.draw_obj()
-
-env.show_window()
 
 # MOVE
 x_inc = 0.0
@@ -101,6 +116,9 @@ for obj in env.get_list_objects():
     logger.info(obj)
     logger.info(f"{obj.start}, {obj.n_vertices}")
 
+env.send_vertices()
+env.send_texture()
+
 while not glfw.window_should_close(env.window):
     glfw.poll_events() 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -116,15 +134,11 @@ while not glfw.window_should_close(env.window):
     if y_inc > 0.01: y_inc = 0.01
     if x_inc < -0.01: x_inc = -0.01
     if y_inc < -0.01: y_inc = -0.01
-    t_x += x_inc * s_inc
-    t_y += y_inc * s_inc
 
     if yr_inc > 10: yr_inc = 10
     if zr_inc > 10: zr_inc = 10
     if yr_inc < -10: yr_inc = -10
     if zr_inc < -10: zr_inc = -10
-    y_angle += yr_inc
-    z_angle += zr_inc
 
 
 
@@ -137,41 +151,37 @@ while not glfw.window_should_close(env.window):
 
         loc = env.get_loc()
 
-        if object_selection != old_object_selection:
-            logger.info('HERE')
-            print(old_object_selection, object_selection)
-            x_inc = 0
-            y_inc = 0
-            yr_inc = 0
-            zr_inc = 0
-            t_x = 0
-            t_y = 0
-            y_angle = 0
-            z_angle = 0
-            s_inc = 1
-            for obj in list_obj:
-                center = obj.get_center()
-                center_matrix = Matrix.get_translation(center['x'], center['y'])
-                glUniformMatrix4fv(loc, 1, GL_TRUE, center_matrix)
-                obj.draw_obj()
-                obj.move_center(0, 0)
+    
+        obj_to_render.position.t_x += x_inc * s_inc
+        obj_to_render.position.t_y += y_inc * s_inc
+        obj_to_render.position.y_angle += yr_inc
+        obj_to_render.position.z_angle += zr_inc
+        obj_to_render.position.s_inc = s_inc
 
-        else:
-            # Render current object
-            env.add_object(obj_to_render)
-            center = obj_to_render.get_center()
-            y_rotation = Matrix.get_y_rotation(center, y_angle)
-            z_rotation = Matrix.get_x_rotation(center, z_angle)
-            scale = Matrix.get_scale(center, s_inc)
-            translation = Matrix.get_translation(t_x, t_y)
-            
-            mat_transform = Matrix.multiply(y_rotation, z_rotation, scale, translation)
+        center = obj_to_render.get_center()
+        y_rotation = Matrix.get_y_rotation(center, obj_to_render.position.y_angle)
+        z_rotation = Matrix.get_x_rotation(center, obj_to_render.position.z_angle)
+        scale = Matrix.get_scale(center, obj_to_render.position.s_inc)
+        translation = Matrix.get_translation(obj_to_render.position.t_x, obj_to_render.position.t_y)
+        
+        mat_transform = Matrix.multiply(y_rotation, z_rotation, scale, translation)
 
-            glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
-            obj_to_render.draw_obj()
-            obj_to_render.move_center(x_inc, y_inc)
-            logger.info(obj_to_render.get_center())
-            logger.info(f"{obj_to_render.start} {obj_to_render.n_vertices}")
+        logger.info(mat_transform)
+
+        glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+        obj_to_render.draw_obj()
+        obj_to_render.move_center(x_inc, y_inc)
+        logger.info(obj_to_render.get_center())
+        logger.info(f"{obj_to_render.start} {obj_to_render.n_vertices}")
+
+        for obj in other_objects:
+            obj.position.t_x = 0
+            obj.position.t_y = 0
+            obj.position.y_angle = 0
+            obj.position.z_angle = 0
+            obj.position.s_inc = 1
+
+
 
     except IndexError:
         logger.error(f'There are only {len(list_obj)} objects!')

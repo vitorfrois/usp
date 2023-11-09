@@ -9,6 +9,8 @@ from logger_helper import LoggerHelper
 
 logger = LoggerHelper.get_logger(__name__)
 
+
+
 class ObjHelper:
     @staticmethod
     def read_file(filename) -> dict:
@@ -67,8 +69,9 @@ class ObjHelper:
         img = Image.open(img_textura)
         img_width = img.size[0]
         img_height = img.size[1]
+        img_format = GL_RGB if img.mode == "RGB" else GL_RGBA
         image_data = img.tobytes("raw", "RGB", 0, -1)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, img_format, GL_UNSIGNED_BYTE, image_data)
         glGenerateMipmap(GL_TEXTURE_2D)
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
