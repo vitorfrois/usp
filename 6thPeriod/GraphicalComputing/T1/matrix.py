@@ -16,7 +16,7 @@ class Matrix:
         return identity_matrix
 
     @staticmethod
-    def get_x_rotation(center, angle):
+    def get_x_inplace_rotation(center, angle):
         s, c = get_trigonometric(angle)
 
         center_matrix = Matrix.get_translation(-center['x'], -center['y'])
@@ -26,10 +26,20 @@ class Matrix:
                                     0  , c  , -s, 0.0, 
                                     0, s, c, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
-        return Matrix.multiply(center_matrix, x_rotation_matrix, back_matrix)
+        return Matrix.multiply(back_matrix, x_rotation_matrix, center_matrix)
+
+    @staticmethod
+    def get_x_rotation(center, angle):
+        s, c = get_trigonometric(angle)
+
+        x_rotation_matrix = np.array([  1 , 0.0, 0, 0.0, 
+                                    0  , c  , -s, 0.0, 
+                                    0, s, c, 0.0, 
+                                    0.0, 0.0, 0.0, 1.0], np.float32)
+        return x_rotation_matrix
     
     @staticmethod
-    def get_y_rotation(center, angle):
+    def get_y_inplace_rotation(center, angle):
         s, c = get_trigonometric(angle)
 
         center_matrix = Matrix.get_translation(-center['x'], -center['y'])
@@ -40,10 +50,21 @@ class Matrix:
                                     -s, 0.0, c, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
 
-        return Matrix.multiply(center_matrix, y_rotation_matrix, back_matrix)
+        return Matrix.multiply(back_matrix, y_rotation_matrix, center_matrix)
 
     @staticmethod
-    def get_z_rotation(center, angle):
+    def get_y_rotation(center, angle):
+        s, c = get_trigonometric(angle)
+
+        y_rotation_matrix = np.array([  c  , 0.0, s, 0.0, 
+                                    0  , 1  , 0.0, 0.0, 
+                                    -s, 0.0, c, 0.0, 
+                                    0.0, 0.0, 0.0, 1.0], np.float32)
+
+        return y_rotation_matrix
+
+    @staticmethod
+    def get_z_inplace_rotation(center, angle):
         s, c = get_trigonometric(angle)
 
         center_matrix = Matrix.get_translation(-center['x'], -center['y'])
@@ -53,12 +74,24 @@ class Matrix:
                                     s  , c  , 0.0, 0.0, 
                                     0.0, 0.0, 1, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
-        return Matrix.multiply(center_matrix, z_rotation_matrix, back_matrix)
+        return Matrix.multiply(back_matrix, z_rotation_matrix, center_matrix)
+
+    @staticmethod
+    def get_z_rotation(center, angle):
+        s, c = get_trigonometric(angle)
+
+        z_rotation_matrix = np.array([  c  , -s, 0.0, 0.0, 
+                                    s  , c  , 0.0, 0.0, 
+                                    0.0, 0.0, 1, 0.0, 
+                                    0.0, 0.0, 0.0, 1.0], np.float32)
+        return z_rotation_matrix
     
     @staticmethod
-    def get_scale(center, x_factor, y_factor = None):
+    def get_scale(center, x_factor, y_factor = None, z_factor = None):
         if y_factor == None:
             y_factor = x_factor
+        if z_factor == None:
+            z_factor = x_factor
 
         center_matrix = Matrix.get_translation(-center['x'], -center['y'])
         back_matrix = Matrix.get_translation(center['x'], center['y'])
@@ -67,7 +100,7 @@ class Matrix:
                                     0.0  , y_factor  , 0.0, 0.0, 
                                     0.0, 0.0, x_factor, 0.0, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
-        return Matrix.multiply(center_matrix, scale_matrix, back_matrix)
+        return Matrix.multiply(back_matrix, scale_matrix, center_matrix)
     
     @staticmethod
     def get_translation(x_factor, y_factor):

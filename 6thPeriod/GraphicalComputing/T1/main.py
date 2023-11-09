@@ -17,6 +17,7 @@ from logger_helper import LoggerHelper
 logger = LoggerHelper.get_logger(__name__)
 offset = ctypes.c_void_p(0)
 polygonal_mode = False
+list_obj = []
 
 object_selection = 1
 old_object_selection = 1
@@ -24,7 +25,9 @@ old_object_selection = 1
 mat_identidade = Matrix.get_identity()
 
 def key_event(window,key,scancode,action,mods):
-    global x_inc, y_inc, yr_inc, zr_inc, s_inc, object_selection
+    global x_inc, y_inc, yr_inc, zr_inc, s_inc
+    global object_selection
+    global list_obj
     
     # MOVE
     if key == 263: x_inc -= 0.0001 #left
@@ -50,6 +53,7 @@ def key_event(window,key,scancode,action,mods):
     if key == 53: object_selection = 5
 
     if key >= 49 and key <= 53:
+        
         x_inc = 0
         y_inc = 0
         yr_inc = 0
@@ -76,22 +80,19 @@ env.add_object(basset)
 box = GLObject('caixa')
 box.init_obj()
 env.add_object(box)
-# box.draw_obj()
-# t = Matrix.get_translation(1, 1)
-# glUniformMatrix4fv(loc, 1, GL_FALSE, t)
-# box.draw_obj()
-# box.move_center(1, 1)
 
+cat = GLObject('cat')
+cat.init_obj()
+env.add_object(cat)
 
-# t = Matrix.get_translation(-0.1, -0.1)
-# glUniformMatrix4fv(env.get_loc(), 1, GL_TRUE, t)
-# basset.draw_obj()
-# basset.move_center(-0.1, -0.1)
+geladeira = GLObject('geladeira')
+geladeira.init_obj()
+env.add_object(geladeira)
 
-# basset = GLObject('basset')
-# basset.init_obj()
-# env.add_object(basset)
-# basset.draw_obj()
+monstro = GLObject('monstro')
+monstro.init_obj()
+env.add_object(monstro)
+
 
 
 # MOVE
@@ -151,16 +152,16 @@ while not glfw.window_should_close(env.window):
 
         loc = env.get_loc()
 
-    
-        obj_to_render.position.t_x += x_inc * s_inc
-        obj_to_render.position.t_y += y_inc * s_inc
-        obj_to_render.position.y_angle += yr_inc
-        obj_to_render.position.z_angle += zr_inc
-        obj_to_render.position.s_inc = s_inc
+        obj_to_render.update_position(t_x, t_y, yr_inc, zr_inc, s_inc)
+        # obj_to_render.position.t_x += x_inc * s_inc
+        # obj_to_render.position.t_y += y_inc * s_inc
+        # obj_to_render.position.y_angle += yr_inc
+        # obj_to_render.position.z_angle += zr_inc
+        # obj_to_render.position.s_inc = s_inc
 
         center = obj_to_render.get_center()
-        y_rotation = Matrix.get_y_rotation(center, obj_to_render.position.y_angle)
-        z_rotation = Matrix.get_x_rotation(center, obj_to_render.position.z_angle)
+        y_rotation = Matrix.get_y_inplace_rotation(center, obj_to_render.position.y_angle)
+        z_rotation = Matrix.get_x_inplace_rotation(center, obj_to_render.position.z_angle)
         scale = Matrix.get_scale(center, obj_to_render.position.s_inc)
         translation = Matrix.get_translation(obj_to_render.position.t_x, obj_to_render.position.t_y)
         
@@ -179,7 +180,8 @@ while not glfw.window_should_close(env.window):
             obj.position.t_y = 0
             obj.position.y_angle = 0
             obj.position.z_angle = 0
-            obj.position.s_inc = 1
+            obj.position.s_inc = 0.5
+            obj_to_render.move_center(0, 0)
 
 
 

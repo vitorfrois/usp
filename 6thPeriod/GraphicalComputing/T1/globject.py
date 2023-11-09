@@ -129,13 +129,29 @@ class GLObject:
             y.append(float(v[1]))
             z.append(float(v[2]))
 
-        minx = min(x)
-        miny = min(y)
-        minz = min(z)
+        minx_index = np.argmin(x)
+        minx = v[: minx_index]
 
-        maxx = max(x)
-        maxy = max(y)
-        maxz = max(z)
+        miny_index = np.argmin(y)
+        miny = v[: miny_index]
+
+        minz_index = np.argmin(z)
+        minz = v[: minz_index]
+
+        maxx_index = np.argmax(x)
+        maxx = v[: maxx_index]
+
+        maxy_index = np.argmax(y)
+        maxy = v[: maxy_index]
+
+        maxz_index = np.argmax(z)
+        maxz = v[: maxz_index]
+
+
+        object_boundaries = [
+            minx, miny, minz,
+            maxx, maxy, maxz
+        ]
 
         px = (minx+maxx) / 2
         py = (miny+maxy) / 2
@@ -143,9 +159,16 @@ class GLObject:
 
         mat_translation = Matrix.get_translation(-px, -py)
 
+        # Normalize
+        x_scale = max(abs(minx), abs(maxx)) / 2
+        y_scale = max(abs(miny), abs(maxy)) / 2
+        z_scale = max(abs(minz), abs(maxz)) / 2
+
+        mat_scale = Matrix.get_scale(self.get_center(), x_scale, y_scale)
+
         self.set_center(0, 0, 0)
 
-        return mat_translation
+        return Matrix.multiply(mat_translation, mat_scale)
 
     def draw_obj(self):
         # print(self.name)
@@ -158,12 +181,10 @@ class GLObject:
         # glBindTexture(GL_TEXTURE_2D, 0)
         # logger.info(f"{self.start}, {self.n_vertices}")
 
-    def set_center(self, x, y, z):
-        self.center = {
-            'x': x,
-            'y': y,
-            'z': z
-        }
+    def set_center(self, x, y):
+        self.center['x'] = x
+        self.center['y'] = y
+
         
     def move_center(self, x, y, z = 0):
         self.center['x'] += x
@@ -175,3 +196,11 @@ class GLObject:
 
     def get_position(self):
         return self.position
+
+    def update_position(self, x_inc, y_inc, yr_inc, zr_inc, s_inc):
+        
+        self.position.t_x += x_inc * s_inc
+        self.position.t_y += y_inc * s_inc
+        self.position.y_angle += yr_inc
+        self.position.z_angle += zr_inc
+        self.position.s_inc = s_inc
