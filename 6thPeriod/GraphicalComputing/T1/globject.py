@@ -16,14 +16,6 @@ offset = ctypes.c_void_p(0)
 
 from objhelper import ObjHelper
 
-@dataclass
-class Position:
-    t_x: float
-    t_y: float
-    y_angle: float
-    z_angle: float
-    s_inc: float
-
 class GLObject:
     name: str
     n_vertices: int
@@ -34,7 +26,8 @@ class GLObject:
     start: int
     number: int
     center: dict
-    position: Position
+    surrounding_polygon: list
+    matrix: np.array
 
     def __init__(self, name):
         self.name = name
@@ -42,12 +35,8 @@ class GLObject:
         self.vertices = []
         self.list_vertices = []
         self.list_texture = []
-        self.center = {
-            'x': 0,
-            'y': 0,
-            'z': 0
-        }
-        self.position = Position(0, 0, 0, 0, 1)
+        self.center = [0, 0, 0]
+        self.matrix = Matrix.get_identity()
 
 
     def __str__(self):
@@ -128,79 +117,92 @@ class GLObject:
             x.append(float(v[0]))
             y.append(float(v[1]))
             z.append(float(v[2]))
+        
+        minx = min(x)
+        miny = min(y)
+        minz = min(z)
 
-        minx_index = np.argmin(x)
-        minx = v[: minx_index]
+        maxx = max(x)
+        maxy = max(y)
+        maxz = max(z)
 
-        miny_index = np.argmin(y)
-        miny = v[: miny_index]
+        # Center Surrounding Polygon Vertices
+        self.center = [np.mean(x), np.mean(y), np.mean(z), 1]
 
-        minz_index = np.argmin(z)
-        minz = v[: minz_index]
+        # Center OpenGL Object
+        mat_translation = Matrix.get_translation(-self.center[0], -self.center[1], -self.center[2])
+        self.move_center(-self.center[0], -self.center[1], -self.center[2])
 
-        maxx_index = np.argmax(x)
-        maxx = v[: maxx_index]
-
-        maxy_index = np.argmax(y)
-        maxy = v[: maxy_index]
-
-        maxz_index = np.argmax(z)
-        maxz = v[: maxz_index]
-
-
-        object_boundaries = [
-            minx, miny, minz,
-            maxx, maxy, maxz
+        
+        self.surrounding_polygon = [
+            [minx, miny, minz, 1],
+            [minx, miny, maxz, 1],
+            [minx, maxy, minz, 1],
+            [minx, maxy, maxz, 1],
+            [maxx, miny, minz, 1],
+            [maxx, miny, maxz, 1],
+            [maxx, maxy, minz, 1],
+            [maxx, maxy, maxz, 1]
         ]
 
-        px = (minx+maxx) / 2
-        py = (miny+maxy) / 2
-        pz = (minz+maxz) / 2
+        logger.info(f"surrounding before = {self.surrounding_polygon}")
 
-        mat_translation = Matrix.get_translation(-px, -py)
+        
+        scale_factor = np.max(np.abs(self.surrounding_polygon)) * 1.5
+        mat_scale = Matrix.get_scale(self.center, 1/scale_factor)
 
-        # Normalize
-        x_scale = max(abs(minx), abs(maxx)) / 2
-        y_scale = max(abs(miny), abs(maxy)) / 2
-        z_scale = max(abs(minz), abs(maxz)) / 2
+        center_matrix = Matrix.multiply(mat_scale, mat_translation)
+        logger.info(f"center matrix: {center_matrix}")
 
-        mat_scale = Matrix.get_scale(self.get_center(), x_scale, y_scale)
 
-        self.set_center(0, 0, 0)
+        if self.valid_transformation(center_matrix):
+            logger.info("valid!")
+        else:
+            logger.info("not valid!")
+        logger.info(f'center = {self.center}')
 
-        return Matrix.multiply(mat_translation, mat_scale)
+        logger.info(f"surrouding after transfor = {self.surrounding_polygon}")
+
+        self.matrix = center_matrix
+        return center_matrix
 
     def draw_obj(self):
-        # print(self.name)
-        # glActiveTexture(GL_TEXTURE0)
-        logger.info(f"texture = {self.number}")
-        logger.info(f"vertices: {self.start}, {self.n_vertices}")
         glEnableVertexAttribArray(0)    
         glBindTexture(GL_TEXTURE_2D, self.number)
         glDrawArrays(GL_TRIANGLES, self.start, self.n_vertices) ## renderizando
-        # glBindTexture(GL_TEXTURE_2D, 0)
-        # logger.info(f"{self.start}, {self.n_vertices}")
 
-    def set_center(self, x, y):
-        self.center['x'] = x
-        self.center['y'] = y
-
-        
     def move_center(self, x, y, z = 0):
-        self.center['x'] += x
-        self.center['y'] += y
-        self.center['z'] += z
+        self.center[0] += x
+        self.center[1] += y
+        self.center[2] += z
 
     def get_center(self):
         return self.center
 
-    def get_position(self):
-        return self.position
+    def valid_transformation(self, mat_transform):
+        list_vertices = self.surrounding_polygon
+        reshaped_transform = mat_transform.reshape(4,4)
 
-    def update_position(self, x_inc, y_inc, yr_inc, zr_inc, s_inc):
+        new_list_vertices = []
+        for v in list_vertices:
+            new_v = reshaped_transform @ v
+            new_list_vertices.append(new_v)
+
+        maxv = np.max(new_list_vertices)
+        minv = np.min(new_list_vertices)
+        logger.info(f"{maxv-1.0} {minv+1.0}")
+        logger.info(new_list_vertices)
+        if (maxv-1) >= 0.001 or (minv + 1.0) <= 0:
+            return False
         
-        self.position.t_x += x_inc * s_inc
-        self.position.t_y += y_inc * s_inc
-        self.position.y_angle += yr_inc
-        self.position.z_angle += zr_inc
-        self.position.s_inc = s_inc
+        # if the transformation is valid
+        self.center = reshaped_transform @ self.center # move center
+        self.surrounding_polygon = new_list_vertices # move surrounding polygon
+        return True
+        
+    def set_matrix(self, matrix):
+        self.matrix = matrix
+    
+    def get_matrix(self):
+        return self.matrix
+    

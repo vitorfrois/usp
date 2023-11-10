@@ -19,8 +19,8 @@ class Matrix:
     def get_x_inplace_rotation(center, angle):
         s, c = get_trigonometric(angle)
 
-        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
-        back_matrix = Matrix.get_translation(center['x'], center['y'])
+        center_matrix = Matrix.get_translation(-center[0], -center[1])
+        back_matrix = Matrix.get_translation(center[0], center[1])
 
         x_rotation_matrix = np.array([  1 , 0.0, 0, 0.0, 
                                     0  , c  , -s, 0.0, 
@@ -42,8 +42,8 @@ class Matrix:
     def get_y_inplace_rotation(center, angle):
         s, c = get_trigonometric(angle)
 
-        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
-        back_matrix = Matrix.get_translation(center['x'], center['y'])
+        center_matrix = Matrix.get_translation(-center[0], -center[1])
+        back_matrix = Matrix.get_translation(center[0], center[1])
 
         y_rotation_matrix = np.array([  c  , 0.0, s, 0.0, 
                                     0  , 1  , 0.0, 0.0, 
@@ -67,8 +67,8 @@ class Matrix:
     def get_z_inplace_rotation(center, angle):
         s, c = get_trigonometric(angle)
 
-        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
-        back_matrix = Matrix.get_translation(center['x'], center['y'])
+        center_matrix = Matrix.get_translation(-center[0], -center[1])
+        back_matrix = Matrix.get_translation(center[0], center[1])
         
         z_rotation_matrix = np.array([  c  , -s, 0.0, 0.0, 
                                     s  , c  , 0.0, 0.0, 
@@ -93,8 +93,8 @@ class Matrix:
         if z_factor == None:
             z_factor = x_factor
 
-        center_matrix = Matrix.get_translation(-center['x'], -center['y'])
-        back_matrix = Matrix.get_translation(center['x'], center['y'])
+        center_matrix = Matrix.get_translation(-center[0], -center[1])
+        back_matrix = Matrix.get_translation(center[0], center[1])
 
         scale_matrix =    np.array([  x_factor  , 0.0 , 0.0, 0.0, 
                                     0.0  , y_factor  , 0.0, 0.0, 
@@ -103,10 +103,10 @@ class Matrix:
         return Matrix.multiply(back_matrix, scale_matrix, center_matrix)
     
     @staticmethod
-    def get_translation(x_factor, y_factor):
+    def get_translation(x_factor, y_factor, z_factor = 0):
         translation_matrix = np.array([  1.0, 0.0, 0.0, x_factor, 
                                     0.0, 1.0, 0.0, y_factor, 
-                                    0.0, 0.0, 1.0, 0, 
+                                    0.0, 0.0, 1.0, z_factor, 
                                     0.0, 0.0, 0.0, 1.0], np.float32)
         return translation_matrix
 
@@ -125,3 +125,12 @@ class Matrix:
             result = Matrix._multiply2(result, matrix)
 
         return result
+
+    @staticmethod
+    def transform_vertex(matrix, vertex):
+        v = vertex
+        v = np.append(v, 1)
+
+        # print(f'new vertex: {v}')
+        v = matrix @ v
+        return v[:2]

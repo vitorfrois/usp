@@ -159,8 +159,9 @@ class Environment:
         # obj.send_obj_vertices(self)
         # obj.send_obj_texture(self)
 
-        # center_obj_mat = obj.center_obj()
-        glUniformMatrix4fv(self.get_loc(), 1, GL_TRUE, Matrix.get_identity())
+        loc = self.get_loc()
+        center_obj_mat = obj.center_obj()
+        glUniformMatrix4fv(loc, 1, GL_TRUE, center_obj_mat)
         logger.info(f'{obj.start}, {obj.n_vertices}')
         
         self.obj_list.append(obj)

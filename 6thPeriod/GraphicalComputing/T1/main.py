@@ -2,6 +2,7 @@ import glfw
 import OpenGL.GL.shaders
 import math
 import logging
+import time
 
 import numpy as np
 
@@ -30,10 +31,10 @@ def key_event(window,key,scancode,action,mods):
     global list_obj
     
     # MOVE
-    if key == 263: x_inc -= 0.0001 #left
-    if key == 262: x_inc += 0.0001 #right
-    if key == 265: y_inc += 0.0001 #up
-    if key == 264: y_inc -= 0.0001 #down
+    if key == 263: x_inc -= 0.001 #left
+    if key == 262: x_inc += 0.001 #right
+    if key == 265: y_inc += 0.001 #up
+    if key == 264: y_inc -= 0.001 #down
     
     # ROTATE
     if key == 65: yr_inc -= 0.1 # a
@@ -42,8 +43,8 @@ def key_event(window,key,scancode,action,mods):
     if key == 83: zr_inc -= 0.1 # s
 
     # SCALE
-    if key == 90: s_inc += 0.1 # z
-    if key == 88: s_inc -= 0.1 # x
+    if key == 90: s_inc += 0.001 # z
+    if key == 88: s_inc -= 0.001 # x
 
     # SELECT OBJECT
     if key == 49: object_selection = 1
@@ -129,17 +130,16 @@ while not glfw.window_should_close(env.window):
     if polygonal_mode==False:
         glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
 
-    
     # Update increases
-    if x_inc > 0.01: x_inc = 0.01
-    if y_inc > 0.01: y_inc = 0.01
-    if x_inc < -0.01: x_inc = -0.01
-    if y_inc < -0.01: y_inc = -0.01
+    if x_inc > 0.05: x_inc = 0.05
+    if y_inc > 0.05: y_inc = 0.05
+    if x_inc < -0.05: x_inc = -0.05
+    if y_inc < -0.05: y_inc = -0.05
 
-    if yr_inc > 10: yr_inc = 10
-    if zr_inc > 10: zr_inc = 10
-    if yr_inc < -10: yr_inc = -10
-    if zr_inc < -10: zr_inc = -10
+    if yr_inc > 20: yr_inc = 20
+    if zr_inc > 20: zr_inc = 20
+    if yr_inc < -20: yr_inc = -20
+    if zr_inc < -20: zr_inc = -20
 
 
 
@@ -152,40 +152,48 @@ while not glfw.window_should_close(env.window):
 
         loc = env.get_loc()
 
-        obj_to_render.update_position(t_x, t_y, yr_inc, zr_inc, s_inc)
-        # obj_to_render.position.t_x += x_inc * s_inc
-        # obj_to_render.position.t_y += y_inc * s_inc
-        # obj_to_render.position.y_angle += yr_inc
-        # obj_to_render.position.z_angle += zr_inc
-        # obj_to_render.position.s_inc = s_inc
-
         center = obj_to_render.get_center()
-        y_rotation = Matrix.get_y_inplace_rotation(center, obj_to_render.position.y_angle)
-        z_rotation = Matrix.get_x_inplace_rotation(center, obj_to_render.position.z_angle)
-        scale = Matrix.get_scale(center, obj_to_render.position.s_inc)
-        translation = Matrix.get_translation(obj_to_render.position.t_x, obj_to_render.position.t_y)
-        
+        y_rotation = Matrix.get_y_inplace_rotation(center, yr_inc)
+        z_rotation = Matrix.get_x_inplace_rotation(center, zr_inc)
+        scale = Matrix.get_scale(center, s_inc)
+        translation = Matrix.get_translation(x_inc, y_inc)
         mat_transform = Matrix.multiply(y_rotation, z_rotation, scale, translation)
 
-        logger.info(mat_transform)
 
-        glUniformMatrix4fv(loc, 1, GL_TRUE, mat_transform)
+        logger.info(mat_transform)
+        
+        final_matrix = obj_to_render.get_matrix()
+        if obj_to_render.valid_transformation(mat_transform):
+            final_matrix = Matrix.multiply(mat_transform, final_matrix)
+            obj_to_render.set_matrix(final_matrix)
+        else:
+            x_inc *= -0.5
+            y_inc *= -0.5
+            yr_inc *= -1
+            zr_inc *= -1
+            s_inc = 1
+
+        glUniformMatrix4fv(loc, 1, GL_TRUE, final_matrix)
         obj_to_render.draw_obj()
-        obj_to_render.move_center(x_inc, y_inc)
+
         logger.info(obj_to_render.get_center())
         logger.info(f"{obj_to_render.start} {obj_to_render.n_vertices}")
 
-        for obj in other_objects:
-            obj.position.t_x = 0
-            obj.position.t_y = 0
-            obj.position.y_angle = 0
-            obj.position.z_angle = 0
-            obj.position.s_inc = 0.5
-            obj_to_render.move_center(0, 0)
+
+
+        # for obj in other_objects:
+        #     obj.position.t_x = 0
+        #     obj.position.t_y = 0
+        #     obj.position.y_angle = 0
+        #     obj.position.z_angle = 0
+        #     obj.position.s_inc = 0.5
+        #     obj_to_render.move_center(0, 0)
 
 
 
-    except IndexError:
+    except IndexError as e:
+        logger.error(f'Error: {e}')
+
         logger.error(f'There are only {len(list_obj)} objects!')
 
     old_object_selection = object_selection
