@@ -1,5 +1,3 @@
-> # Introdução à Estatística
-
 ### Determinístico VS Probabilístico
 
 Em um modelo **determinístico**, podemos deduzir o resultado de um experimento com certeza.
