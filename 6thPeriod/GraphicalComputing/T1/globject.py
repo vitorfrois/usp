@@ -10,7 +10,7 @@ from matrix import Matrix
 from logger_helper import LoggerHelper
 
 
-TEXTURES_EXT = ["tif", "jpg"]
+TEXTURES_EXT = ["tif", "jpg", "png"]
 logger = LoggerHelper.get_logger(__name__)
 offset = ctypes.c_void_p(0)
 
@@ -60,7 +60,7 @@ class GLObject:
         self.n_vertices = len(self.list_vertices)
         self.init_vertices(self.list_vertices)
 
-    def init_obj(self):
+    def init_obj(self, linear_magnification = True):
         modelo = ObjHelper.read_file(f'resources/{self.name}.obj')
 
         ### inserindo vertices do modelo no vetor de vertices
@@ -76,7 +76,7 @@ class GLObject:
         ### inserindo coordenadas de textura do modelo no vetor de texturas
         for extension in TEXTURES_EXT:
             try:
-                ObjHelper.load_texture_from_file(f'resources/{self.name}.{extension}', self.number)
+                ObjHelper.load_texture_from_file(f'resources/{self.name}.{extension}', self.number, linear_magnification)
                 break
             except FileNotFoundError:
                 logger.error(f"Did not found {extension} texture file")
@@ -190,8 +190,6 @@ class GLObject:
 
         maxv = np.max(new_list_vertices)
         minv = np.min(new_list_vertices)
-        logger.info(f"{maxv-1.0} {minv+1.0}")
-        logger.info(new_list_vertices)
         if (maxv-1) >= 0.001 or (minv + 1.0) <= 0:
             return False
         

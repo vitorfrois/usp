@@ -62,7 +62,7 @@ class ObjHelper:
         return model
 
     @staticmethod
-    def load_texture_from_file(img_textura, texture_id):
+    def load_texture_from_file(img_textura, texture_id, linear_magnification = True):
         logger.info(f"tid: {texture_id}")
         glBindTexture(GL_TEXTURE_2D, texture_id)
         
@@ -74,12 +74,15 @@ class ObjHelper:
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img_width, img_height, 0, img_format, GL_UNSIGNED_BYTE, image_data)
         glGenerateMipmap(GL_TEXTURE_2D)
 
+        if linear_magnification:
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        else:
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+        
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-
-        # glBindTexture(GL_TEXTURE_2D, 0)
 
         return texture_id
 

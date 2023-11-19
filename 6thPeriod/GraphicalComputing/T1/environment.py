@@ -52,7 +52,7 @@ class Environment:
     list_vertices: list
     list_texture: list
 
-    def __init__(self):
+    def __init__(self, x=600, y=480):
         self.n_objects = 0
         self.total_vertices = 0
         self.obj_list = []
@@ -61,7 +61,7 @@ class Environment:
 
         glfw.init()
         glfw.window_hint(glfw.VISIBLE, glfw.FALSE);
-        self.window = glfw.create_window(600, 480, "Trabalho 1", None, None)
+        self.window = glfw.create_window(x, y, "Trabalho 1", None, None)
         glfw.make_context_current(self.window)
 
         # Request a program and shader slots from GPU
@@ -106,6 +106,9 @@ class Environment:
         glEnableVertexAttribArray(self.texture_loc)
 
         glEnable(GL_DEPTH_TEST) 
+        
+        self.show_window()
+
 
     @staticmethod
     def compile_shader(shader):
@@ -155,10 +158,7 @@ class Environment:
 
         for t in obj.texture['position']:
             self.list_texture.append(t)
-
-        # obj.send_obj_vertices(self)
-        # obj.send_obj_texture(self)
-
+            
         loc = self.get_loc()
         center_obj_mat = obj.center_obj()
         glUniformMatrix4fv(loc, 1, GL_TRUE, center_obj_mat)

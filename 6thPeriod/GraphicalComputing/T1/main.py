@@ -19,16 +19,18 @@ logger = LoggerHelper.get_logger(__name__)
 offset = ctypes.c_void_p(0)
 polygonal_mode = False
 list_obj = []
+GLFW_PRESS = 1
 
+linear_magnification = True
 object_selection = 1
-old_object_selection = 1
-
-mat_identidade = Matrix.get_identity()
 
 def key_event(window,key,scancode,action,mods):
     global x_inc, y_inc, yr_inc, zr_inc, s_inc
     global object_selection
     global list_obj
+    global polygonal_mode
+    global linear_magnification
+
     
     # MOVE
     if key == 263: x_inc -= 0.001 #left
@@ -61,143 +63,138 @@ def key_event(window,key,scancode,action,mods):
         zr_inc = 0
         s_inc = 1
 
+    if key == 80 and action == GLFW_PRESS:
+        polygonal_mode = not polygonal_mode
+
+    if key == 86 and action == GLFW_PRESS:
+        linear_magnification = not linear_magnification
+
     info_message = f"Pressed key: {key}"
     logging.info(info_message)
 
 
-env = Environment()
-env.set_key_callback(key_event)
-window = env.get_window()
+
+def main():
+    env = Environment(1200, 900)
+    env.set_key_callback(key_event)
+    window = env.get_window()
+
+    loc = env.get_loc()
+
+    # Adding objects
+    basset = GLObject('basset')
+    basset.init_obj()
+    env.add_object(basset)
+
+    box = GLObject('caixa')
+    box.init_obj()
+    env.add_object(box)
+
+    container = GLObject('container')
+    container.init_obj()
+    env.add_object(container)
+
+    geladeira = GLObject('coffee')
+    geladeira.init_obj()
+    env.add_object(geladeira)
+
+    monstro = GLObject('monstro')
+    monstro.init_obj()
+    env.add_object(monstro)
+
+    global x_inc, y_inc, yr_inc, zr_inc, s_inc
+    global object_selection
+    global list_obj
+    global polygonal_mode
+    global linear_magnification
+
+    # MOVE
+    x_inc = 0.0
+    y_inc = 0.0
+
+    # ROTATE
+    yr_inc = 0.0
+    zr_inc = 0.0
+
+    # SCALE
+    s_inc = 1.0
+
+    object_selection = 1
+
+    for obj in env.get_list_objects():
+        logger.info(obj)
+
+    env.send_vertices()
+    env.send_texture()
 
 
-env.show_window()
-
-loc = env.get_loc()
-
-basset = GLObject('basset')
-basset.init_obj()
-env.add_object(basset)
-
-box = GLObject('caixa')
-box.init_obj()
-env.add_object(box)
-
-cat = GLObject('cat')
-cat.init_obj()
-env.add_object(cat)
-
-geladeira = GLObject('geladeira')
-geladeira.init_obj()
-env.add_object(geladeira)
-
-monstro = GLObject('monstro')
-monstro.init_obj()
-env.add_object(monstro)
+    while not glfw.window_should_close(env.window):
+        glfw.poll_events() 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClearColor(1.0, 1.0, 1.0, 1.0)
 
 
-
-# MOVE
-x_inc = 0.0
-y_inc = 0.0
-
-# ROTATE
-yr_inc = 0.0
-zr_inc = 0.0
-
-# SCALE
-s_inc = 1.0
-
-t_x = 0.0
-t_y = 0.0
-y_angle = 0.0
-z_angle = 0.0
-
-object_selection = 1
-
-for obj in env.get_list_objects():
-    logger.info(obj)
-    logger.info(f"{obj.start}, {obj.n_vertices}")
-
-env.send_vertices()
-env.send_texture()
-
-while not glfw.window_should_close(env.window):
-    glfw.poll_events() 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glClearColor(1.0, 1.0, 1.0, 1.0)
-    if polygonal_mode==True:
-        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE)
-    if polygonal_mode==False:
-        glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
-
-    # Update increases
-    if x_inc > 0.05: x_inc = 0.05
-    if y_inc > 0.05: y_inc = 0.05
-    if x_inc < -0.05: x_inc = -0.05
-    if y_inc < -0.05: y_inc = -0.05
-
-    if yr_inc > 20: yr_inc = 20
-    if zr_inc > 20: zr_inc = 20
-    if yr_inc < -20: yr_inc = -20
-    if zr_inc < -20: zr_inc = -20
-
-
-
-    # Get All Objects
-    list_obj = env.get_list_objects()
-    
-    try:
-        obj_to_render = list_obj[object_selection-1]
-        other_objects = [obj for obj in list_obj if obj != obj_to_render]
-
-        loc = env.get_loc()
-
-        center = obj_to_render.get_center()
-        y_rotation = Matrix.get_y_inplace_rotation(center, yr_inc)
-        z_rotation = Matrix.get_x_inplace_rotation(center, zr_inc)
-        scale = Matrix.get_scale(center, s_inc)
-        translation = Matrix.get_translation(x_inc, y_inc)
-        mat_transform = Matrix.multiply(y_rotation, z_rotation, scale, translation)
-
-
-        logger.info(mat_transform)
-        
-        final_matrix = obj_to_render.get_matrix()
-        if obj_to_render.valid_transformation(mat_transform):
-            final_matrix = Matrix.multiply(mat_transform, final_matrix)
-            obj_to_render.set_matrix(final_matrix)
+        if polygonal_mode:
+            glPolygonMode(GL_FRONT_AND_BACK,GL_LINE)
         else:
-            x_inc *= -0.5
-            y_inc *= -0.5
-            yr_inc *= -1
-            zr_inc *= -1
-            s_inc = 1
+            glPolygonMode(GL_FRONT_AND_BACK,GL_FILL)
 
-        glUniformMatrix4fv(loc, 1, GL_TRUE, final_matrix)
-        obj_to_render.draw_obj()
-
-        logger.info(obj_to_render.get_center())
-        logger.info(f"{obj_to_render.start} {obj_to_render.n_vertices}")
+        if linear_magnification:
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        else:
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
 
 
+        # Bound increases
+        if x_inc > 0.05: x_inc = 0.05
+        if y_inc > 0.05: y_inc = 0.05
+        if x_inc < -0.05: x_inc = -0.05
+        if y_inc < -0.05: y_inc = -0.05
 
-        # for obj in other_objects:
-        #     obj.position.t_x = 0
-        #     obj.position.t_y = 0
-        #     obj.position.y_angle = 0
-        #     obj.position.z_angle = 0
-        #     obj.position.s_inc = 0.5
-        #     obj_to_render.move_center(0, 0)
+        if yr_inc > 20: yr_inc = 20
+        if zr_inc > 20: zr_inc = 20
+        if yr_inc < -20: yr_inc = -20
+        if zr_inc < -20: zr_inc = -20
 
+        # Get All Objects
+        list_obj = env.get_list_objects()
+        
+        try:
+            obj_to_render = list_obj[object_selection-1]
+            other_objects = [obj for obj in list_obj if obj != obj_to_render]
 
+            loc = env.get_loc()
 
-    except IndexError as e:
-        logger.error(f'Error: {e}')
+            center = obj_to_render.get_center()
+            y_rotation = Matrix.get_y_inplace_rotation(center, yr_inc)
+            z_rotation = Matrix.get_x_inplace_rotation(center, zr_inc)
+            scale = Matrix.get_scale(center, s_inc)
+            translation = Matrix.get_translation(x_inc, y_inc)
+            mat_transform = Matrix.multiply(y_rotation, z_rotation, scale, translation)
 
-        logger.error(f'There are only {len(list_obj)} objects!')
+            final_matrix = obj_to_render.get_matrix()
+            if obj_to_render.valid_transformation(mat_transform):
+                final_matrix = Matrix.multiply(mat_transform, final_matrix)
+                obj_to_render.set_matrix(final_matrix)
+            else:
+                x_inc *= -0.5
+                y_inc *= -0.5
+                yr_inc *= -1
+                zr_inc *= -1
+                s_inc = 1
 
-    old_object_selection = object_selection
+            glUniformMatrix4fv(loc, 1, GL_TRUE, final_matrix)
+            obj_to_render.draw_obj()
 
-    glfw.swap_buffers(env.window)
+        except IndexError as e:
+            logger.error(f'Error: {e}')
+            logger.error(f'There are only {len(list_obj)} objects!')
 
-glfw.terminate()
+        glfw.swap_buffers(env.window)
+
+    glfw.terminate()
+
+if __name__ == '__main__':
+    main()
