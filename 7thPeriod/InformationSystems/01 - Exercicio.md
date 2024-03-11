@@ -1,6 +1,4 @@
 # Exercício 1
-1. De que forma Sistemas de Informação têm transformado as relações (de negócio, sociais, culturais) dentro da sociedade nas últimas décadas?
-2. Dê exemplos
 
 Nas últimas décadas, o rápido aumento na capacidade de processamento em computadores e a crescente disponibilidade de dados permitiram uma revolução da informação no mundo. Nesse contexto, a área de Sistemas de Informação tem trasnformado as relações empresariais de forma a utilizar os dados disponíveis a fim de orientar tomadas de decisão em todo tipo de situação.
 
