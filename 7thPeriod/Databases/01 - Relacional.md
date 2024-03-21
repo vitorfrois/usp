@@ -18,10 +18,13 @@ Atributos podem ser Monovalorados (Idade) ou Multivalorados (Irmaos).
 
 { } - Usam-se chaves para indicar conjuntos – conjuntos não podem repetir
 elementos, e n˜ao existe ordem entre os elementos.
+
 ( ) - Usam-se parˆenteses para indicar listas – listas assumem uma ordem
 entre os elementos.
+
 [ ] - Usam-se colchetes para indicar valores numa tupla – especialmente
 para identificar um elemento num conjunto.
+
 < > - Usam-se chaves angulares para indicar tuplas – valores que
 respeitam a ordem da lista que define a tupla.
 
