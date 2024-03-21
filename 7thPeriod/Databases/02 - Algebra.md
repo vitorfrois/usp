@@ -50,7 +50,7 @@ Cardinalidade de um conjunto
 Não leva em conta a estrutura das relações. As tuplas são todas as combinações possíveis de valores de T1 com valores de T2.
 
 #### Junção
-    É muito mais eficiente um algoritmo que pegue somente as tuplas que atendem ao critério "associado" ao Produto Cartesiano do que efetuar todo o processo.
+É muito mais eficiente um algoritmo que pegue somente as tuplas que atendem ao critério "associado" ao Produto Cartesiano do que efetuar todo o processo.
 
 Existem os seguintes tipos de junção:
 - Interna
