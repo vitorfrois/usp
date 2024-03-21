@@ -49,8 +49,18 @@ Cardinalidade de um conjunto
 #### Produto Cartesiano $T1 \times T2$
 Não leva em conta a estrutura das relações. As tuplas são todas as combinações possíveis de valores de T1 com valores de T2.
 
+#### Junção
+    É muito mais eficiente um algoritmo que pegue somente as tuplas que atendem ao critério "associado" ao Produto Cartesiano do que efetuar todo o processo.
+
+Existem os seguintes tipos de junção:
+- Interna
+- Externa Completa
+- Externa à Esquerda
+- Externa à Direita
+
 ### Operadores Unários
 #### Operador de Selecão $\sigma_{(c)}T$
 Aplicada sobre uma relação T, obtem o subconjunto das tuplas que satisfazem à condição c.
 #### Projeção $\pi_{(<\textbf{lista de atributos}>)}T$
 Seleciona colunas da relação.
+
