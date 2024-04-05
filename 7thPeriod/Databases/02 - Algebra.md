@@ -15,7 +15,6 @@ Quase todas os Operadores Relacionais sobre Conjuntos são binários. Para que d
 
 Esperamos uma compatibilidade sintática, isto é, além dos dois conjuntos possuírem o mesmo número de atributos, cada par de atributos correspondentes tem o mesmo domínio.
 
-$$
 Aluno = (Nome, Idade, Curso)
 
 Professor = (Nome, Idade, Depto)
@@ -29,7 +28,6 @@ Dom(idade): int,
 Dom(Curso): char(12),
 
 Dom(Depto): char(12)
-$$
 
 Professor é compatível com Aluno, mas não com Funcionário.
 
