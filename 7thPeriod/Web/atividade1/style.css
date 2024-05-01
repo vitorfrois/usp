@@ -1,20 +1,40 @@
-.content-text {
-    margin-top: 2;
-    font-family: "Bad Script", cursive;
+a {
+    color: white;
+    text-decoration: none;
 }
 
-.content-title {
-    font-family: "Bad Script", cursive;
+.navbar-style {
+    display: flex;
+    align-items: center;
+    margin-top: 3pt;
 }
 
-.footer-text li {
-    font-family: "Manjari", sans-serif;
-    font-weight: 100;
+.cursive {
+    font-family: "Bad Script", cursive;
+    font-weight: 400;
     font-style: normal;
 }
 
-.footer-title {
+h1.cursive {
+    color: white;
+    margin-bottom: 2%;
+}
+
+h2.cursive {
+    color: white;
+}
+
+.sans {
     font-family: "Manjari", sans-serif;
     font-weight: 100;
-    font-style: normal;
+    font-style: bold;
+}
+
+ul.sans {
+    color: white;
+    list-style-type: none;
+}
+
+p.sans {
+    color: white
 }
