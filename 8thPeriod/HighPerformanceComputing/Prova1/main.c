@@ -3,8 +3,9 @@
 #include <omp.h>
 #include <math.h>
 
-#define N 2
-#define T N
+#define N 10
+#define T 10
+// Esse código foi feito para rodar com T = N
 
 int main(){
 	char linebreak;
@@ -45,14 +46,16 @@ int main(){
 		#pragma omp single
 		{
 			for(j = 0; j < N; j++){
-				#pragma omp task 
+				// Task medial
+				#pragma omp task private(i)
 				{
 					medial[j] = 0;
 					for(i = 0; i < N; i++)
 						if (A[i][j] < media) 
 							medial[j] += 1;
 				}
-				#pragma omp task
+				// Task dsvpdr
+				#pragma omp task private(i)
 				{
 					soma_diferenca[j] = 0;
 					for(i = 0; i < N; i++)
