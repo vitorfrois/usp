@@ -13,6 +13,7 @@ O principal fator que impede a escalabilidade é o overhead de comunicação, qu
 ### Por que a GPU não é uma SIMD pura?
 
 Uma máquina SIMD pura possui uma única thread com múltiplos dados. A GPU possui múltiplos threads, e dessa forma, se configura comoo um misto de MIMD e SIMD.
+(falar sobre os dois níveis de multithread (primeiro sobre streaming multiprocessors e segundo sobre o conjunto de SMs)
 
 ### Compare a rede Ômega (Multiestágio) com crossbar e barramento em relação a desempenho e custos.
 
