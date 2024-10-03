@@ -1,0 +1,2 @@
+gosta(joao, maria).
+
