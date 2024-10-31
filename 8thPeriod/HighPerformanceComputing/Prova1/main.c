@@ -3,8 +3,8 @@
 #include <omp.h>
 #include <math.h>
 
-#define N 10
-#define T 10
+#define N 2
+#define T 2
 // Esse código foi feito para rodar com T = N
 
 int main(){
@@ -28,17 +28,16 @@ int main(){
 		for(i = 0; i < N; i++)
 			soma_colunas[j] += A[i][j];
 	}
-	#pragma omp barrier
 
 	// Média da matriz
 	double media = 0;
-	#pragma omp parallel for reduction(+:media) private(i) num_threads(T)
+	#pragma omp parallel for reduction(+:media) private(i)
 	for(i = 0; i < N; i++)
 		media += soma_colunas[i];
 	
+	// Média dos valores da matriz
 	media = media / (N*N);
 	
-	// Média dos valores da matriz
 	int medial[N], soma_diferenca[N];
 	double dsvpdr[N];
 	#pragma omp parallel
