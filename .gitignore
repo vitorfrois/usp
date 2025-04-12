@@ -10,3 +10,10 @@
 __pycache__
 venv
 /.obsidian
+
+
+
+*
+!/**/
+!*.*
+
